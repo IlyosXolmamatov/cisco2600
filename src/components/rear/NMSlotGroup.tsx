@@ -1,161 +1,169 @@
-import { useRef, useEffect, forwardRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useRef, useEffect, useState } from 'react'
 import * as THREE from 'three'
 
-// Empty NM slot — blank ventilated cover plate
-// Scale: 1 unit = 10 cm
+/**
+ * NM Slot Group Component
+ * 
+ * Represents the Cisco 2600's Network Module expansion slot
+ * on the rear panel with perforated blank cover.
+ * 
+ * Scale: 1 unit = 10 cm
+ * Position: Far left of rear panel (x ≈ -1.50)
+ */
 
-interface Props {
+interface NMSlotGroupProps {
   selectedId: string | null
   onSelect: (id: string) => void
-  coverOpen: boolean
+  nmCoverRef: React.Ref<THREE.Group>
 }
 
-// Perforated cover using InstancedMesh
-const HOLE_COLS = 9
-const HOLE_ROWS = 4
-const TOTAL_HOLES = HOLE_COLS * HOLE_ROWS
-const HOLE_SPACING_X = 0.1
-const HOLE_SPACING_Y = 0.075
+export default function NMSlotGroup({
+  selectedId,
+  onSelect,
+  nmCoverRef,
+}: NMSlotGroupProps) {
+  const [coverHov, setCoverHov] = useState(false)
+  const sel = selectedId === 'nm-blank'
+  const glow = sel ? 0.50 : coverHov ? 0.30 : 0
 
-function PerforationGrid({ offsetZ = 0.04 }: { offsetZ?: number }) {
-  const meshRef = useRef<THREE.InstancedMesh>(null)
+  const HOLE_COLS = 9
+  const HOLE_ROWS = 4
+  const holeRef = useRef<THREE.InstancedMesh>(null)
   const dummy = new THREE.Object3D()
 
+  // Layout perforations in grid
   useEffect(() => {
-    if (!meshRef.current) return
+    if (!holeRef.current) return
     let idx = 0
-    for (let row = 0; row < HOLE_ROWS; row++) {
-      for (let col = 0; col < HOLE_COLS; col++) {
+    for (let r = 0; r < HOLE_ROWS; r++) {
+      for (let c = 0; c < HOLE_COLS; c++) {
         dummy.position.set(
-          -((HOLE_COLS - 1) * HOLE_SPACING_X) / 2 + col * HOLE_SPACING_X,
-          -((HOLE_ROWS - 1) * HOLE_SPACING_Y) / 2 + row * HOLE_SPACING_Y,
-          offsetZ,
+          -((HOLE_COLS - 1) * 0.1) / 2 + c * 0.1,
+          -((HOLE_ROWS - 1) * 0.075) / 2 + r * 0.075,
+          0.04,
         )
         dummy.updateMatrix()
-        meshRef.current.setMatrixAt(idx, dummy.matrix)
+        holeRef.current.setMatrixAt(idx, dummy.matrix)
         idx++
       }
     }
-    meshRef.current.instanceMatrix.needsUpdate = true
-  }, [offsetZ])
-
-  return (
-    <instancedMesh ref={meshRef} args={[undefined, undefined, TOTAL_HOLES]} castShadow={false}>
-      <cylinderGeometry args={[0.022, 0.022, 0.065, 6]} />
-      <meshStandardMaterial color="#111318" metalness={0.6} roughness={0.7} />
-    </instancedMesh>
-  )
-}
-
-// The NM cover group — ref-forwarded so parent can GSAP-animate it
-const NMCoverPlate = forwardRef<THREE.Group, {
-  selected: boolean
-  hovered: boolean
-  onClick: () => void
-  onHover: (v: boolean) => void
-}>(({ selected, hovered, onClick, onHover }, ref) => {
-  const glow = selected ? 0.5 : hovered ? 0.28 : 0
-
-  return (
-    <group ref={ref}>
-      {/* Main cover plate */}
-      <mesh
-        castShadow
-        receiveShadow
-        onClick={(e) => { e.stopPropagation(); onClick() }}
-        onPointerOver={(e) => { e.stopPropagation(); onHover(true) }}
-        onPointerOut={() => onHover(false)}
-      >
-        <boxGeometry args={[1.35, 0.43, 0.055]} />
-        <meshStandardMaterial
-          color="#252830"
-          metalness={0.78}
-          roughness={0.45}
-          emissive="#777788"
-          emissiveIntensity={glow}
-        />
-      </mesh>
-
-      {/* Perforation grid */}
-      <PerforationGrid />
-
-      {/* Subtle bevel top edge */}
-      <mesh position={[0, 0.205, 0.015]}>
-        <boxGeometry args={[1.30, 0.012, 0.042]} />
-        <meshStandardMaterial color="#1e2128" metalness={0.8} roughness={0.4} />
-      </mesh>
-      {/* Subtle bevel bottom edge */}
-      <mesh position={[0, -0.205, 0.015]}>
-        <boxGeometry args={[1.30, 0.012, 0.042]} />
-        <meshStandardMaterial color="#1e2128" metalness={0.8} roughness={0.4} />
-      </mesh>
-
-      {/* Thumbscrews ×4 */}
-      {[[-0.56, 0.185], [0.56, 0.185], [-0.56, -0.185], [0.56, -0.185]].map(([x, y], i) => (
-        <mesh key={i} position={[x, y, 0.032]}>
-          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
-          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
-        </mesh>
-      ))}
-
-      {/* "NM" label bar (placeholder typography) */}
-      <mesh position={[0.5, 0.0, 0.04]}>
-        <boxGeometry args={[0.12, 0.025, 0.003]} />
-        <meshStandardMaterial color="#555566" metalness={0.2} roughness={0.8} />
-      </mesh>
-    </group>
-  )
-})
-NMCoverPlate.displayName = 'NMCoverPlate'
-
-export { NMCoverPlate }
-
-export default function NMSlotGroup({ selectedId, onSelect, coverOpen }: Props) {
-  const coverRef = useRef<THREE.Group>(null)
-  const [hovered, setHovered] = useState(false)
-
-  // No GSAP here — parent RearPanelScene drives this via the exported ref
-  // We expose the ref through the NMCoverPlate forwardRef
+    holeRef.current.instanceMatrix.needsUpdate = true
+  }, [])
 
   return (
     <group>
-      {/* Slot interior (visible when cover removed) */}
-      <mesh position={[0, 0, -0.04]}>
-        <boxGeometry args={[1.30, 0.40, 0.04]} />
-        <meshStandardMaterial color="#0d0e12" metalness={0.3} roughness={0.9} />
-      </mesh>
-      {/* NM edge connector (gold strips at back) */}
-      {Array.from({ length: 24 }).map((_, i) => (
-        <mesh key={i} position={[-0.52 + i * 0.044, 0, -0.055]}>
-          <boxGeometry args={[0.018, 0.32, 0.008]} />
-          <meshStandardMaterial color="#ccaa30" metalness={0.95} roughness={0.05} />
-        </mesh>
-      ))}
-      {/* Guide rails */}
-      <mesh position={[0, 0.19, -0.03]}>
-        <boxGeometry args={[1.25, 0.012, 0.055]} />
-        <meshStandardMaterial color="#1a1c22" metalness={0.7} roughness={0.5} />
-      </mesh>
-      <mesh position={[0, -0.19, -0.03]}>
-        <boxGeometry args={[1.25, 0.012, 0.055]} />
-        <meshStandardMaterial color="#1a1c22" metalness={0.7} roughness={0.5} />
+      {/* ── Slot recessed interior (dark cavity) ── */}
+      <mesh position={[0, 0, -0.02]} receiveShadow>
+        <boxGeometry args={[1.30, 0.40, 0.02]} />
+        <meshStandardMaterial color="#050609" metalness={0.2} roughness={0.95} />
       </mesh>
 
-      {/* Cover plate */}
-      <NMCoverPlate
-        ref={coverRef}
-        selected={selectedId === 'nm-blank'}
-        hovered={hovered}
-        onClick={() => onSelect('nm-blank')}
-        onHover={setHovered}
-      />
+      {/* ── Gold-plated edge connector (Module insertion contacts) ── */}
+      {Array.from({ length: 22 }).map((_, i) => (
+        <mesh key={`edge-${i}`} position={[-0.5 + i * 0.046, 0, -0.025]}>
+          <boxGeometry args={[0.018, 0.30, 0.008]} />
+          <meshStandardMaterial
+            color="#ccaa30"
+            metalness={0.95}
+            roughness={0.05}
+            emissive="#554400"
+            emissiveIntensity={0.15}
+          />
+        </mesh>
+      ))}
+
+      {/* ── Upper guide rail (prevents module tilting) ── */}
+      <mesh position={[0, 0.185, -0.015]} receiveShadow>
+        <boxGeometry args={[1.22, 0.01, 0.04]} />
+        <meshStandardMaterial color="#111318" metalness={0.65} roughness={0.6} />
+      </mesh>
+
+      {/* ── Lower guide rail ── */}
+      <mesh position={[0, -0.185, -0.015]} receiveShadow>
+        <boxGeometry args={[1.22, 0.01, 0.04]} />
+        <meshStandardMaterial color="#111318" metalness={0.65} roughness={0.6} />
+      </mesh>
+
+      {/* ── Blank cover plate face (main interactive surface) ── */}
+      <group ref={nmCoverRef as any}>
+        <mesh
+          castShadow
+          receiveShadow
+          onPointerOver={(e) => {
+            e.stopPropagation()
+            setCoverHov(true)
+          }}
+          onPointerOut={() => setCoverHov(false)}
+          onClick={(e) => {
+            e.stopPropagation()
+            onSelect('nm-blank')
+          }}
+        >
+          <boxGeometry args={[1.35, 0.43, 0.052]} />
+          <meshStandardMaterial
+            color="#252830"
+            metalness={0.78}
+            roughness={0.48}
+            emissive="#667777"
+            emissiveIntensity={glow}
+          />
+        </mesh>
+
+        {/* ── Perforated holes (6mm dia, 100mm × 75mm spacing) ── */}
+        <instancedMesh
+          ref={holeRef}
+          args={[undefined, undefined, HOLE_COLS * HOLE_ROWS]}
+        >
+          <cylinderGeometry args={[0.022, 0.022, 0.065, 6]} />
+          <meshStandardMaterial color="#0d0f14" metalness={0.5} roughness={0.8} />
+        </instancedMesh>
+
+        {/* ── Upper-left thumbscrew/mounting post ── */}
+        <mesh position={[-0.56, 0.185, 0.032]} castShadow>
+          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
+          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* ── Upper-right thumbscrew ── */}
+        <mesh position={[0.56, 0.185, 0.032]} castShadow>
+          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
+          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* ── Lower-left thumbscrew ── */}
+        <mesh position={[-0.56, -0.185, 0.032]} castShadow>
+          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
+          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* ── Lower-right thumbscrew ── */}
+        <mesh position={[0.56, -0.185, 0.032]} castShadow>
+          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
+          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* ── Slot designation label area ── */}
+        <mesh position={[0, -0.23, 0.04]}>
+          <boxGeometry args={[0.50, 0.026, 0.002]} />
+          <meshStandardMaterial
+            color="#556677"
+            metalness={0.2}
+            roughness={0.9}
+            emissive="#334455"
+            emissiveIntensity={0.3}
+          />
+        </mesh>
+
+        {/* ── Indicator LED (no module present) ── */}
+        <mesh position={[-0.62, -0.065, 0.04]}>
+          <sphereGeometry args={[0.016, 8, 8]} />
+          <meshStandardMaterial
+            color="#ffaa44"
+            emissive="#ffaa44"
+            emissiveIntensity={sel || coverHov ? 2.0 : 0.8}
+          />
+        </mesh>
+      </group>
     </group>
   )
 }
-
-// Named re-export so RearPanelScene can import the ref-able cover plate directly
-export { NMCoverPlate as NMCoverRef }
-
-// Small React useState import needed in this file
-import { useState } from 'react'

@@ -1,16 +1,13 @@
-import { useRef, useState } from 'react'
-import * as THREE from 'three'
+import { useState } from 'react'
 
 // Single RJ-45 port with full internal pinning
 function RJ45Port({
   id,
-  label,
   labelColor,
   selectedId,
   onSelect,
 }: {
   id: string
-  label: string
   labelColor: string
   selectedId: string | null
   onSelect: (id: string) => void
@@ -101,11 +98,10 @@ export default function RJ45Group({ selectedId, onSelect }: Props) {
       </mesh>
 
       {/* Three ports */}
-      {PORTS.map(({ id, label, labelColor, x }) => (
+      {PORTS.map(({ id, labelColor, x }) => (
         <group key={id} position={[x, 0.02, 0.02]}>
           <RJ45Port
             id={id}
-            label={label}
             labelColor={labelColor}
             selectedId={selectedId}
             onSelect={onSelect}

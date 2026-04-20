@@ -9,36 +9,6 @@ interface Props {
   onSelect: (id: string) => void
 }
 
-function SelectableMesh({
-  id, selectedId, onSelect, children, ...rest
-}: {
-  id: string
-  selectedId: string | null
-  onSelect: (id: string) => void
-  children?: React.ReactNode
-  position?: [number, number, number]
-  rotation?: [number, number, number]
-}) {
-  const [hovered, setHovered] = useState(false)
-  const sel = selectedId === id
-  return (
-    <group
-      {...rest}
-      onPointerOver={(e) => { e.stopPropagation(); setHovered(true) }}
-      onPointerOut={() => setHovered(false)}
-      onClick={(e) => { e.stopPropagation(); onSelect(id) }}
-    >
-      {children}
-      {/* invisible hit-expand plane so small parts are easy to click */}
-      {(hovered || sel) && (
-        <mesh>
-          <boxGeometry args={[0.001, 0.001, 0.001]} />
-          <meshBasicMaterial transparent opacity={0} />
-        </mesh>
-      )}
-    </group>
-  )
-}
 
 function IECInlet({ selected, hovered }: { selected: boolean; hovered: boolean }) {
   const glow = selected ? 0.55 : hovered ? 0.35 : 0

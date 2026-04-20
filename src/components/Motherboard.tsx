@@ -1,5 +1,4 @@
-import { useRef, useState } from 'react'
-import * as THREE from 'three'
+import { useState } from 'react'
 
 interface MotherboardProps {
   position: [number, number, number]
@@ -7,45 +6,6 @@ interface MotherboardProps {
   selectedComponent: string | null
 }
 
-function HoverMesh({
-  id,
-  children,
-  onSelect,
-  isSelected,
-  ...props
-}: {
-  id: string
-  children: React.ReactNode
-  onSelect: (id: string) => void
-  isSelected: boolean
-  position?: [number, number, number]
-  rotation?: [number, number, number]
-}) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <group
-      {...props}
-      onPointerOver={(e) => { e.stopPropagation(); setHovered(true) }}
-      onPointerOut={() => setHovered(false)}
-      onClick={(e) => { e.stopPropagation(); onSelect(id) }}
-    >
-      {/* highlight plane */}
-      {(hovered || isSelected) && (
-        <mesh>
-          <boxGeometry args={[0.01, 0.01, 0.01]} />
-          <meshStandardMaterial
-            color={isSelected ? '#00ffff' : '#ffffff'}
-            emissive={isSelected ? '#00aaaa' : '#888888'}
-            emissiveIntensity={0.8}
-            transparent
-            opacity={0}
-          />
-        </mesh>
-      )}
-      {children}
-    </group>
-  )
-}
 
 function PCBChip({
   position,

@@ -148,14 +148,14 @@ export default function Chassis({ isCoverOpen, onSelect, selectedComponent }: Ch
       </mesh>
       {/* Rack screw holes */}
       {[-0.08, 0.08].map((z, i) => (
-        <mesh key={i} position={[-W / 2 - 0.22, 0, z]}>
-          <cylinderGeometry args={[0.025, 0.025, 0.22, 8]} rotation={[0, 0, Math.PI / 2]} />
+        <mesh key={i} position={[-W / 2 - 0.22, 0, z]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.22, 8]} />
           <meshStandardMaterial color="#222222" metalness={0.9} />
         </mesh>
       ))}
       {[-0.08, 0.08].map((z, i) => (
-        <mesh key={i} position={[W / 2 + 0.22, 0, z]}>
-          <cylinderGeometry args={[0.025, 0.025, 0.22, 8]} rotation={[0, 0, Math.PI / 2]} />
+        <mesh key={i} position={[W / 2 + 0.22, 0, z]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.22, 8]} />
           <meshStandardMaterial color="#222222" metalness={0.9} />
         </mesh>
       ))}
