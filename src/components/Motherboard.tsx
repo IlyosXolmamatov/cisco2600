@@ -48,7 +48,7 @@ export default function Motherboard({ position, onSelect, selectedComponent }: M
 
   return (
     <group position={position}>
-      {/* PCB Board */}
+      {/* PCB Board - Dark Green Base */}
       <mesh
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true) }}
         onPointerOut={() => setHovered(false)}
@@ -58,27 +58,41 @@ export default function Motherboard({ position, onSelect, selectedComponent }: M
       >
         <boxGeometry args={[4.0, 0.04, 2.6]} />
         <meshStandardMaterial
-          color={hovered || selectedComponent === 'pcb' ? '#2a6a3a' : '#1a4a2a'}
-          metalness={0.2}
-          roughness={0.7}
-          emissive={hovered || selectedComponent === 'pcb' ? '#0a2a0a' : '#000000'}
+          color={hovered || selectedComponent === 'pcb' ? '#1e5a2e' : '#0d3d1a'}
+          metalness={0.15}
+          roughness={0.8}
+          emissive={hovered || selectedComponent === 'pcb' ? '#1a4a2a' : '#000000'}
           emissiveIntensity={hovered ? 0.3 : selectedComponent === 'pcb' ? 0.5 : 0}
         />
       </mesh>
 
-      {/* PCB trace lines (decorative) */}
-      {Array.from({ length: 12 }).map((_, i) => (
-        <mesh key={`htrace-${i}`} position={[-1.8 + i * 0.32, 0.025, 0]}>
-          <boxGeometry args={[0.01, 0.002, 2.4]} />
-          <meshStandardMaterial color="#c8a830" metalness={0.9} roughness={0.1} />
+      {/* Copper Trace Network - Horizontal Dense Grid */}
+      {Array.from({ length: 16 }).map((_, i) => (
+        <mesh key={`htrace-dense-${i}`} position={[-1.9 + i * 0.25, 0.0255, 0]}>
+          <boxGeometry args={[0.015, 0.003, 2.5]} />
+          <meshStandardMaterial color="#d4a030" metalness={0.95} roughness={0.08} />
         </mesh>
       ))}
-      {Array.from({ length: 8 }).map((_, i) => (
-        <mesh key={`vtrace-${i}`} position={[0, 0.025, -1.1 + i * 0.32]}>
-          <boxGeometry args={[3.8, 0.002, 0.01]} />
-          <meshStandardMaterial color="#c8a830" metalness={0.9} roughness={0.1} />
+      
+      {/* Copper Trace Network - Vertical Dense Grid */}
+      {Array.from({ length: 11 }).map((_, i) => (
+        <mesh key={`vtrace-dense-${i}`} position={[0, 0.0255, -1.25 + i * 0.25]}>
+          <boxGeometry args={[3.9, 0.003, 0.015]} />
+          <meshStandardMaterial color="#d4a030" metalness={0.95} roughness={0.08} />
         </mesh>
       ))}
+
+      {/* Copper via pads (solder connections) */}
+      {Array.from({ length: 24 }).map((_, i) => {
+        const x = -1.8 + (i % 6) * 0.75
+        const z = -1.0 + Math.floor(i / 6) * 0.4
+        return (
+          <mesh key={`via-${i}`} position={[x, 0.027, z]}>
+            <cylinderGeometry args={[0.035, 0.035, 0.002, 6]} />
+            <meshStandardMaterial color="#c8a830" metalness={0.98} roughness={0.05} />
+          </mesh>
+        )
+      })}
 
       {/* CPU chip */}
       <PCBChip

@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import Chassis from './Chassis'
 import Motherboard from './Motherboard'
 import RAM from './RAM'
-import { WICCard, NMModule, PSU } from './Modules'
+import { WICCard, NMModule, PSU, Fan } from './Modules'
 
 interface RouterSceneProps {
   isCoverOpen: boolean
@@ -23,17 +23,19 @@ const REST = {
   wic1: { x: -1.2, y:  0.00, z: -0.05 },
   nm:   { x: 0.3,  y:  0.01, z: -0.80 },
   psu:  { x: 1.6,  y:  0.02, z: -0.90 },
+  fan:  { x: -1.5, y: -0.05, z:  0.15 },
 }
 
-// Exploded offsets from rest
+// Exploded offsets from rest - Enhanced for professional sequence
 const EXPLODED = {
-  mb:   { x: 0,    y: -0.60, z: 0 },
-  ram0: { x: 0.9,  y:  1.60, z: 1.40 },
-  ram1: { x: 1.25, y:  1.60, z: -1.40 },
-  wic0: { x: -1.2, y:  0.35, z: 2.80 },
-  wic1: { x: -1.2, y:  0.35, z: 2.00 },
-  nm:   { x: 0.3,  y:  0.35, z: -2.80 },
-  psu:  { x: 1.6,  y:  1.10, z: -0.90 },
+  mb:   { x: 0,    y: -0.85, z: 0 },     // Down (motherboard drops)
+  ram0: { x: 0.9,  y:  1.85, z: 1.65 }, // Up & Out (spec: Y+8)
+  ram1: { x: 1.25, y:  1.85, z: -1.65 }, // Up & Out (spec: Y+8)
+  wic0: { x: -1.2, y:  0.45, z: 3.10 }, // Out (spec: Z+10)
+  wic1: { x: -1.2, y:  0.45, z: 2.30 }, // Out (spec: Z+10)
+  nm:   { x: 0.3,  y:  0.45, z: -3.10 }, // Out backward
+  psu:  { x: 1.6,  y:  1.55, z: -0.90 }, // Up significantly (spec: Y+10)
+  fan:  { x: -2.1, y:  0.50, z:  0.15 }, // Out Left (spec: X-5)
 }
 
 export default function RouterScene({ isCoverOpen, isExploded, selectedComponent, onSelect }: RouterSceneProps) {
@@ -44,10 +46,12 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
   const wic1Ref = useRef<THREE.Group>(null)
   const nmRef   = useRef<THREE.Group>(null)
   const psuRef  = useRef<THREE.Group>(null)
+  const fanRef  = useRef<THREE.Group>(null)
 
   useEffect(() => {
     const targets = [
       { ref: mbRef,   key: 'mb' },
+      { ref: fanRef,  key: 'fan' },    // Fan first (leftmost)
       { ref: ram0Ref, key: 'ram0' },
       { ref: ram1Ref, key: 'ram1' },
       { ref: wic0Ref, key: 'wic0' },
@@ -64,9 +68,9 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
         x: dest.x,
         y: dest.y,
         z: dest.z,
-        duration: 0.65,
+        duration: 0.7,
         ease: 'power2.inOut',
-      }, i * 0.06)
+      }, i * 0.065)  // Enhanced stagger timing
     })
 
     return () => { tl.kill() }
@@ -102,6 +106,10 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
 
       <group ref={psuRef} position={[REST.psu.x, REST.psu.y, REST.psu.z]}>
         <PSU position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
+      </group>
+
+      <group ref={fanRef} position={[REST.fan.x, REST.fan.y, REST.fan.z]}>
+        <Fan position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
       <ContactShadows position={[0, -0.22, 0]} opacity={0.55} scale={9} blur={2.5} far={1.2} />
