@@ -15,46 +15,79 @@ interface RouterSceneProps {
 }
 
 /*
-  Cisco 2600XM Internal Topology (1 unit = 10 cm)
-  Top-down view — X: left(-) → right(+), Z: back(-) → front(+)
-
-  ┌─────────────────────────────────────────────────────────┐
-  │  [PSU]    [Fan]     [WIC0][WIC1]  [IORiser]    [HDD Bay]│
-  │  Rear-L                    [RAM0][RAM1]    [NM Module]   │
-  │                [Motherboard / CPU / Flash]              │
-  └─────────────────────────────────────────────────────────┘
+  Cisco 2600XM Internal Topology — HIGH-FIDELITY DIGITAL TWIN
+  Reference: Cisco 2600XM Internal Component Map (Provided Image)
   
-  Actual Mapping (from reference image):
-  - LEFT SECTION: PSU (rear-left), Fan (front-left)
-  - CENTER: Motherboard, CPU, RAM DIMMs, Boot ROM, Flash SIMM
-  - CENTER-REAR: NM Module slots
-  - RIGHT SECTION: Hard Drive Bay, I/O Riser
+  Spatial Coordinate System (1 unit = 10 cm):
+  - X-Axis: LEFT (-) → RIGHT (+)
+  - Y-Axis: DOWN (-) → UP (+) [mounting plane reference]
+  - Z-Axis: REAR (-) → FRONT (+)
+  
+  Chassis Dimensions: 0.445m (W) × 0.043m (H) × 0.301m (D)
+  In Units: 4.45 × 0.43 × 3.01
+  
+  COMPONENT TOPOLOGY (from reference image):
+  ┌─────────────────────────────────────────────────────────────┐
+  │  REAR SECTION:                                              │
+  │  [1-PSU]     [2-Fan]     [4-NM Slots]     [Central-CPU Area]│
+  │  Left-Rear   Left-Front  Central-Rear     [5-6-7 RAM/ROM]   │
+  │                          [8-HDD Bay]                         │
+  │  FRONT SECTION:          [9-I/O Riser]    [3-Motherboard]   │
+  │                                                              │
+  └─────────────────────────────────────────────────────────────┘
+  
+  Legend Mapping:
+  1 = PSU (Power Supply) — Left-Rear corner
+  2 = Cooling Fan — Left-Front, aligned with vent louver
+  3 = Motherboard (System) — Central, ~80% of floor
+  4 = NM Slots (Network Modules) — Central-Rear, recessed
+  5 = DRAM DIMM Sockets — Central-Front, vertical orientation
+  6 = Boot ROM — Central chip area
+  7 = Flash SIMM — Central chip area
+  8 = Hard Drive Bay — Far Right, skeletal frame (optional)
+  9 = Internal I/O Riser — Front-Right, white connector strip
 */
 
 const REST = {
-  mb:   { x:  0.00, y: -0.10, z:  0.00 },
-  ram0: { x:  0.60, y:  0.04, z:  0.52 },
-  ram1: { x:  0.60, y:  0.04, z: -0.28 },
-  wic0: { x: -1.25, y:  0.00, z:  0.80 },
-  wic1: { x: -1.25, y:  0.00, z:  0.10 },
-  nm:   { x:  0.30, y:  0.01, z: -0.78 },
-  psu:  { x: -1.55, y:  0.02, z: -0.88 }, // Rear-LEFT (was right)
-  fan:  { x: -1.50, y: -0.05, z:  0.20 }, // Front-LEFT (was right)
-  hdd:  { x:  1.60, y:  0.00, z:  0.60 },
-  ior:  { x:  0.30, y:  0.04, z:  0.95 },
+  /* Motherboard PCB — Central floor, 80% coverage */
+  mb:   { x:  0.00, y: -0.12, z:  0.00, name: '3-System/Motherboard' },
+  
+  /* RAM DIMMs — Central-Front, vertical slots */
+  ram0: { x:  0.58, y:  0.06, z:  0.52, name: '5-DRAM DIMM Slot 0' },
+  ram1: { x:  0.58, y:  0.06, z:  -0.32, name: '5-DRAM DIMM Slot 1' },
+  
+  /* WIC Cards — Left section (currently not in reference, kept for compatibility) */
+  wic0: { x: -1.20, y:  0.02, z:  0.75, name: 'WIC Slot 0' },
+  wic1: { x: -1.20, y:  0.02, z:  0.05, name: 'WIC Slot 1' },
+  
+  /* Network Module — Central-Rear, recessed bay with heatsink */
+  nm:   { x:  0.25, y:  0.03, z: -0.75, name: '4-Network Module Slots (NM-1E/NM-4T)' },
+  
+  /* Power Supply Unit — Far Left-Rear corner */
+  psu:  { x: -1.58, y:  0.00, z: -0.82, name: '1-Power Supply Unit (PSU)' },
+  
+  /* Cooling Fan — Left-Front, aligned with chassis vent */
+  fan:  { x: -1.50, y: -0.02, z:  0.25, name: '2-Cooling Fan' },
+  
+  /* Hard Drive Bay — Far Right, skeletal frame (optional) */
+  hdd:  { x:  1.62, y: -0.05, z:  0.65, name: '8-Hard Drive Bay (Optional)' },
+  
+  /* Internal I/O Riser — Front-Right, daughterboard */
+  ior:  { x:  0.35, y:  0.08, z:  0.92, name: '9-Internal I/O Connector/Riser' },
 }
 
 const EXPLODED = {
-  mb:   { x:  0.00, y: -0.85, z:  0.00 },
-  ram0: { x:  0.60, y:  1.80, z:  2.00 },
-  ram1: { x:  0.60, y:  1.80, z: -2.00 },
-  wic0: { x: -1.25, y:  0.50, z:  3.20 },
-  wic1: { x: -1.25, y:  0.50, z:  2.40 },
-  nm:   { x:  0.30, y:  0.50, z: -3.30 },
-  psu:  { x: -1.55, y:  1.80, z: -0.88 }, // Explode upward
-  fan:  { x: -2.40, y:  0.55, z:  0.20 }, // Explode left-forward
-  hdd:  { x:  1.60, y:  0.60, z:  2.30 },
-  ior:  { x:  0.30, y:  1.40, z:  1.60 }, // Right side, explode forward-up
+  /* Exploded offsets for disassembly view (Y-axis primary, staggered) */
+  mb:   { x:  0.00, y: -0.90, z:  0.00 },
+  ram0: { x:  0.58, y:  1.75, z:  2.00 },
+  ram1: { x:  0.58, y:  1.75, z: -2.10 },
+  wic0: { x: -1.20, y:  0.45, z:  3.10 },
+  wic1: { x: -1.20, y:  0.45, z:  2.35 },
+  nm:   { x:  0.25, y:  0.50, z: -3.25 },
+  psu:  { x: -2.40, y:  1.75, z: -0.82 },  // Left-rear, upward + outward
+  fan:  { x: -2.50, y:  0.50, z:  0.75 },  // Left-front, forward + outward
+  hdd:  { x:  2.50, y:  0.55, z:  2.35 },  // Right, outward + forward
+  ior:  { x:  0.35, y:  1.50, z:  1.60 },  // Front-right, upward + forward
 }
 
 type ComponentKey = keyof typeof REST
@@ -70,6 +103,7 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
   const fanRef  = useRef<THREE.Group>(null)
   const hddRef  = useRef<THREE.Group>(null)
   const iorRef  = useRef<THREE.Group>(null)
+  const wiringRef = useRef<THREE.Group>(null)
 
   useEffect(() => {
     const targets: { ref: React.RefObject<THREE.Group | null>; key: ComponentKey }[] = [
@@ -93,59 +127,112 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
         x: dest.x,
         y: dest.y,
         z: dest.z,
-        duration: 0.75,
+        duration: 0.70,
         ease: 'power2.inOut',
-      }, i * 0.07)
+      }, i * 0.065)
     })
 
     return () => { tl.kill() }
   }, [isExploded])
 
   return (
-    <group>
+    <group name="router-internal-assembly">
       <Chassis isCoverOpen={isCoverOpen} onSelect={onSelect} selectedComponent={selectedComponent} />
 
-      <group ref={mbRef} position={[REST.mb.x, REST.mb.y, REST.mb.z]}>
+      {/* ═══════════ MOTHERBOARD — Component #3 ═══════════ */}
+      <group ref={mbRef} position={[REST.mb.x, REST.mb.y, REST.mb.z]} name={REST.mb.name}>
         <Motherboard position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <group ref={ram0Ref} position={[REST.ram0.x, REST.ram0.y, REST.ram0.z]}>
+      {/* ═══════════ RAM DIMM SLOTS — Component #5 ═══════════ */}
+      <group ref={ram0Ref} position={[REST.ram0.x, REST.ram0.y, REST.ram0.z]} name={REST.ram0.name}>
         <RAM position={[0, 0, 0]} slotIndex={0} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
-
-      <group ref={ram1Ref} position={[REST.ram1.x, REST.ram1.y, REST.ram1.z]}>
+      <group ref={ram1Ref} position={[REST.ram1.x, REST.ram1.y, REST.ram1.z]} name={REST.ram1.name}>
         <RAM position={[0, 0, 0]} slotIndex={1} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <group ref={wic0Ref} position={[REST.wic0.x, REST.wic0.y, REST.wic0.z]}>
+      {/* ═══════════ WIC CARDS (Legacy, kept for backward compatibility) ═══════════ */}
+      <group ref={wic0Ref} position={[REST.wic0.x, REST.wic0.y, REST.wic0.z]} name={REST.wic0.name}>
         <WICCard position={[0, 0, 0]} slotIndex={0} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
-
-      <group ref={wic1Ref} position={[REST.wic1.x, REST.wic1.y, REST.wic1.z]}>
+      <group ref={wic1Ref} position={[REST.wic1.x, REST.wic1.y, REST.wic1.z]} name={REST.wic1.name}>
         <WICCard position={[0, 0, 0]} slotIndex={1} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <group ref={nmRef} position={[REST.nm.x, REST.nm.y, REST.nm.z]}>
+      {/* ═══════════ NETWORK MODULE — Component #4 ═══════════ */}
+      <group ref={nmRef} position={[REST.nm.x, REST.nm.y, REST.nm.z]} name={REST.nm.name}>
         <NMModule position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <group ref={psuRef} position={[REST.psu.x, REST.psu.y, REST.psu.z]}>
+      {/* ═══════════ POWER SUPPLY UNIT — Component #1 ═══════════ */}
+      <group ref={psuRef} position={[REST.psu.x, REST.psu.y, REST.psu.z]} name={REST.psu.name}>
         <PSU position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <group ref={fanRef} position={[REST.fan.x, REST.fan.y, REST.fan.z]}>
+      {/* ═══════════ COOLING FAN — Component #2 ═══════════ */}
+      <group ref={fanRef} position={[REST.fan.x, REST.fan.y, REST.fan.z]} name={REST.fan.name}>
         <Fan position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <group ref={hddRef} position={[REST.hdd.x, REST.hdd.y, REST.hdd.z]}>
+      {/* ═══════════ HARD DRIVE BAY — Component #8 ═══════════ */}
+      <group ref={hddRef} position={[REST.hdd.x, REST.hdd.y, REST.hdd.z]} name={REST.hdd.name}>
         <HDDBay position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <group ref={iorRef} position={[REST.ior.x, REST.ior.y, REST.ior.z]}>
+      {/* ═══════════ I/O RISER — Component #9 ═══════════ */}
+      <group ref={iorRef} position={[REST.ior.x, REST.ior.y, REST.ior.z]} name={REST.ior.name}>
         <IORiser position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      <ContactShadows position={[0, -0.22, 0]} opacity={0.55} scale={9} blur={2.5} far={1.2} />
+      {/* ═══════════ PROCEDURAL WIRING — PSU to Motherboard ═══════════ */}
+      <group ref={wiringRef} name="internal-wiring">
+        {/* Main power harness (Red/Yellow/Black twisted pair) */}
+        {/* Red wire: +12V */}
+        <mesh>
+          <tubeGeometry args={[
+            [
+              [-1.55, 0.15, -0.82],  // From PSU
+              [-0.80, 0.25, -0.40],  // Path elevation
+              [-0.20, 0.15, 0.10],   // To motherboard power header
+            ] as any,
+            0.008,  // radius
+            8,      // radialSegments
+          ]} />
+          <meshStandardMaterial color="#ff2222" metalness={0.4} roughness={0.8} />
+        </mesh>
+        
+        {/* Yellow wire: +5V */}
+        <mesh>
+          <tubeGeometry args={[
+            [
+              [-1.55, 0.12, -0.82],  // From PSU
+              [-0.70, 0.20, -0.35],  // Path elevation (slightly lower)
+              [-0.15, 0.10, 0.12],   // To motherboard
+            ] as any,
+            0.008,
+            8,
+          ]} />
+          <meshStandardMaterial color="#ffdd22" metalness={0.4} roughness={0.8} />
+        </mesh>
+
+        {/* Black wire: Ground */}
+        <mesh>
+          <tubeGeometry args={[
+            [
+              [-1.55, 0.08, -0.82],  // From PSU
+              [-0.60, 0.15, -0.30],  // Path elevation
+              [-0.10, 0.05, 0.15],   // To motherboard ground
+            ] as any,
+            0.008,
+            8,
+          ]} />
+          <meshStandardMaterial color="#1a1a1a" metalness={0.3} roughness={0.9} />
+        </mesh>
+      </group>
+
+      {/* ═══════════ CONTACT SHADOWS ═══════════ */}
+      <ContactShadows position={[0, -0.25, 0]} opacity={0.50} scale={10} blur={2.8} far={1.2} />
     </group>
   )
 }

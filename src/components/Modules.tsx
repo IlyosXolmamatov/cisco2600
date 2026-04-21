@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import * as THREE from 'three'
 
 /* ═══════════════════════════════════════════════════════
    Fan — 60mm square blower assembly (Cisco 2600)
@@ -219,10 +220,44 @@ export function NMModule({ position, onSelect, selectedComponent }: NMProps) {
         <boxGeometry args={[0.52, 0.055, 0.52]} />
         <meshStandardMaterial color="#111122" metalness={0.6} roughness={0.3} />
       </mesh>
-      {/* ASIC heat spreader */}
-      <mesh position={[0, 0.095, 0]}>
-        <boxGeometry args={[0.48, 0.020, 0.48]} />
-        <meshStandardMaterial color="#aaaaaa" metalness={0.92} roughness={0.12} />
+      
+      {/* ════ HEATSINK WITH FIN EXTRUSIONS ════ */}
+      {/* Heatsink base — matte black aluminum */}
+      <mesh position={[0, 0.105, 0]} castShadow>
+        <boxGeometry args={[0.50, 0.035, 0.50]} />
+        <meshStandardMaterial color="#1a1a1a" metalness={0.85} roughness={0.18} />
+      </mesh>
+      
+      {/* Vertical fins — aluminum extrusion pattern */}
+      {Array.from({ length: 12 }).map((_, i) => (
+        <mesh key={`fin-${i}`} position={[-0.22 + i * 0.04, 0.125, 0]} castShadow>
+          <boxGeometry args={[0.008, 0.045, 0.48]} />
+          <meshStandardMaterial 
+            color="#2a2a2a" 
+            metalness={0.82} 
+            roughness={0.22}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      ))}
+      
+      {/* Cross-fins for enhanced cooling efficiency */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <mesh key={`cross-fin-${i}`} position={[0, 0.122, -0.20 + i * 0.055]} castShadow>
+          <boxGeometry args={[0.48, 0.008, 0.008]} />
+          <meshStandardMaterial 
+            color="#252525" 
+            metalness={0.80} 
+            roughness={0.25}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      ))}
+      
+      {/* Heatsink thermal interface indicator */}
+      <mesh position={[0, 0.0895, 0]}>
+        <boxGeometry args={[0.48, 0.002, 0.48]} />
+        <meshStandardMaterial color="#3a3a4a" metalness={0.3} roughness={0.9} />
       </mesh>
       {/* Secondary ICs */}
       {([[-0.45, 0.065, 0.3], [0.45, 0.065, 0.3], [-0.45, 0.065, -0.3], [0.45, 0.065, -0.3]] as [number,number,number][]).map(([x,y,z],i) => (
