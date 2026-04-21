@@ -3,6 +3,7 @@ import { ContactShadows } from '@react-three/drei'
 import gsap from 'gsap'
 import * as THREE from 'three'
 import Chassis from './Chassis'
+import FrontBezel from './FrontBezel'
 import Motherboard from './Motherboard'
 import RAM from './RAM'
 import { WICCard, NMModule, PSU, Fan } from './Modules'
@@ -79,6 +80,7 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
   return (
     <group>
       <Chassis isCoverOpen={isCoverOpen} onSelect={onSelect} selectedComponent={selectedComponent} />
+      <FrontBezel onSelect={onSelect} selectedComponent={selectedComponent} />
 
       <group ref={mbRef} position={[REST.mb.x, REST.mb.y, REST.mb.z]}>
         <Motherboard position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
