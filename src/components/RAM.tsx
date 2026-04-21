@@ -7,6 +7,10 @@ interface RAMProps {
   selectedComponent: string | null
 }
 
+/* Cisco 2600 proprietary DRAM DIMM
+   Fits within chassis H=0.43 units (4.3cm)
+   PCB height: 0.22 units (2.2cm) — verified to clear chassis roof
+*/
 export default function RAM({ position, slotIndex, onSelect, selectedComponent }: RAMProps) {
   const [hovered, setHovered] = useState(false)
   const id = `ram-${slotIndex}`
@@ -19,82 +23,87 @@ export default function RAM({ position, slotIndex, onSelect, selectedComponent }
       onPointerOut={() => setHovered(false)}
       onClick={(e) => { e.stopPropagation(); onSelect(id) }}
     >
-      {/* DIMM Slot Walls (Left) */}
+      {/* DIMM Slot housing — left wall */}
       <mesh position={[-0.08, 0, 0]} castShadow>
-        <boxGeometry args={[0.02, 0.6, 1.35]} />
-        <meshStandardMaterial color="#333344" metalness={0.7} roughness={0.4} />
+        <boxGeometry args={[0.022, 0.26, 1.1]} />
+        <meshStandardMaterial color="#2a2a3a" metalness={0.7} roughness={0.4} />
       </mesh>
-
-      {/* DIMM Slot Walls (Right) */}
+      {/* DIMM Slot housing — right wall */}
       <mesh position={[0.08, 0, 0]} castShadow>
-        <boxGeometry args={[0.02, 0.6, 1.35]} />
-        <meshStandardMaterial color="#333344" metalness={0.7} roughness={0.4} />
+        <boxGeometry args={[0.022, 0.26, 1.1]} />
+        <meshStandardMaterial color="#2a2a3a" metalness={0.7} roughness={0.4} />
       </mesh>
 
-      {/* DIMM PCB - Vertical Orientation */}
+      {/* DIMM PCB — dark green board */}
       <mesh castShadow>
-        <boxGeometry args={[0.06, 0.58, 1.35]} />
+        <boxGeometry args={[0.055, 0.22, 1.1]} />
         <meshStandardMaterial
           color={hovered || isSelected ? '#2a6a3a' : '#1a4a2a'}
           metalness={0.2}
           roughness={0.7}
           emissive={hovered || isSelected ? '#0a3a0a' : '#000000'}
-          emissiveIntensity={hovered ? 0.4 : isSelected ? 0.7 : 0}
+          emissiveIntensity={hovered ? 0.45 : isSelected ? 0.75 : 0}
         />
       </mesh>
 
-      {/* RAM chips on DIMM - Side A */}
+      {/* Copper traces on PCB face (visible stripes) */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <mesh key={`trace-${i}`} position={[0.029, -0.02 + i * 0.04, 0]}>
+          <boxGeometry args={[0.002, 0.008, 0.95]} />
+          <meshStandardMaterial color="#c8a830" metalness={0.95} roughness={0.08} />
+        </mesh>
+      ))}
+
+      {/* RAM chips — Side A (8 chips) */}
       {Array.from({ length: 8 }).map((_, i) => (
-        <mesh key={`chip-a-${i}`} position={[0.045, 0.08, -0.55 + i * 0.16]} castShadow>
-          <boxGeometry args={[0.022, 0.24, 0.12]} />
+        <mesh key={`chip-a-${i}`} position={[0.040, 0.04, -0.44 + i * 0.126]} castShadow>
+          <boxGeometry args={[0.018, 0.09, 0.096]} />
           <meshStandardMaterial color="#0a0a1a" metalness={0.65} roughness={0.25} />
         </mesh>
       ))}
 
-      {/* RAM chips on DIMM - Side B */}
+      {/* RAM chips — Side B (8 chips) */}
       {Array.from({ length: 8 }).map((_, i) => (
-        <mesh key={`chip-b-${i}`} position={[-0.045, 0.08, -0.55 + i * 0.16]} castShadow>
-          <boxGeometry args={[0.022, 0.24, 0.12]} />
+        <mesh key={`chip-b-${i}`} position={[-0.040, 0.04, -0.44 + i * 0.126]} castShadow>
+          <boxGeometry args={[0.018, 0.09, 0.096]} />
           <meshStandardMaterial color="#0a0a1a" metalness={0.65} roughness={0.25} />
         </mesh>
       ))}
 
-      {/* Gold contacts at bottom - Enhanced */}
-      {Array.from({ length: 30 }).map((_, i) => (
-        <mesh key={`contact-${i}`} position={[0, -0.29, -0.63 + i * 0.044]}>
-          <boxGeometry args={[0.065, 0.05, 0.028]} />
+      {/* SPD EEPROM chip (small, one side) */}
+      <mesh position={[0.040, 0.04, -0.50]}>
+        <boxGeometry args={[0.018, 0.06, 0.05]} />
+        <meshStandardMaterial color="#222233" metalness={0.5} roughness={0.4} />
+      </mesh>
+
+      {/* Gold finger contacts (bottom edge — 34 contacts) */}
+      {Array.from({ length: 34 }).map((_, i) => (
+        <mesh key={`contact-${i}`} position={[0, -0.105, -0.50 + i * 0.030]}>
+          <boxGeometry args={[0.060, 0.016, 0.020]} />
           <meshStandardMaterial color="#d4aa20" metalness={0.98} roughness={0.03} />
         </mesh>
       ))}
 
-      {/* Retention clips - Left */}
-      <mesh position={[-0.12, -0.32, -0.68]} castShadow>
-        <boxGeometry args={[0.05, 0.08, 0.05]} />
-        <meshStandardMaterial color="#666677" metalness={0.6} roughness={0.4} />
+      {/* Label sticker */}
+      <mesh position={[0.030, 0.06, 0]}>
+        <boxGeometry args={[0.003, 0.10, 0.85]} />
+        <meshStandardMaterial color="#e8e8d8" metalness={0.05} roughness={0.95} />
+      </mesh>
+      {/* Label text stripe */}
+      <mesh position={[0.031, 0.06, 0]}>
+        <boxGeometry args={[0.001, 0.03, 0.55]} />
+        <meshStandardMaterial color="#333344" metalness={0} roughness={1} />
       </mesh>
 
-      {/* Retention clips - Right */}
-      <mesh position={[0.12, -0.32, -0.68]} castShadow>
-        <boxGeometry args={[0.05, 0.08, 0.05]} />
-        <meshStandardMaterial color="#666677" metalness={0.6} roughness={0.4} />
+      {/* Retention clip — front */}
+      <mesh position={[0, -0.125, -0.56]} castShadow>
+        <boxGeometry args={[0.16, 0.065, 0.04]} />
+        <meshStandardMaterial color="#555566" metalness={0.6} roughness={0.4} />
       </mesh>
-
-      {/* Retention clips - Left Far */}
-      <mesh position={[-0.12, -0.32, 0.68]} castShadow>
-        <boxGeometry args={[0.05, 0.08, 0.05]} />
-        <meshStandardMaterial color="#666677" metalness={0.6} roughness={0.4} />
-      </mesh>
-
-      {/* Retention clips - Right Far */}
-      <mesh position={[0.12, -0.32, 0.68]} castShadow>
-        <boxGeometry args={[0.05, 0.08, 0.05]} />
-        <meshStandardMaterial color="#666677" metalness={0.6} roughness={0.4} />
-      </mesh>
-
-      {/* Label sticker - Front */}
-      <mesh position={[0.035, 0.15, 0]}>
-        <boxGeometry args={[0.003, 0.35, 1.0]} />
-        <meshStandardMaterial color="#e0e0d0" metalness={0.05} roughness={0.95} />
+      {/* Retention clip — back */}
+      <mesh position={[0, -0.125, 0.56]} castShadow>
+        <boxGeometry args={[0.16, 0.065, 0.04]} />
+        <meshStandardMaterial color="#555566" metalness={0.6} roughness={0.4} />
       </mesh>
     </group>
   )

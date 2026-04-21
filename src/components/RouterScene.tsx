@@ -3,10 +3,9 @@ import { ContactShadows } from '@react-three/drei'
 import gsap from 'gsap'
 import * as THREE from 'three'
 import Chassis from './Chassis'
-import FrontBezel from './FrontBezel'
 import Motherboard from './Motherboard'
 import RAM from './RAM'
-import { WICCard, NMModule, PSU, Fan } from './Modules'
+import { WICCard, NMModule, PSU, Fan, HDDBay, IORiser } from './Modules'
 
 interface RouterSceneProps {
   isCoverOpen: boolean
@@ -15,29 +14,50 @@ interface RouterSceneProps {
   onSelect: (id: string) => void
 }
 
-// Resting world-positions for every sub-group
+/*
+  Cisco 2600XM Internal Topology (1 unit = 10 cm)
+  Top-down view — X: left(-) → right(+), Z: back(-) → front(+)
+
+  ┌─────────────────────────────────────────────────────────┐
+  │  [PSU]    [Fan]     [WIC0][WIC1]  [IORiser]    [HDD Bay]│
+  │  Rear-L                    [RAM0][RAM1]    [NM Module]   │
+  │                [Motherboard / CPU / Flash]              │
+  └─────────────────────────────────────────────────────────┘
+  
+  Actual Mapping (from reference image):
+  - LEFT SECTION: PSU (rear-left), Fan (front-left)
+  - CENTER: Motherboard, CPU, RAM DIMMs, Boot ROM, Flash SIMM
+  - CENTER-REAR: NM Module slots
+  - RIGHT SECTION: Hard Drive Bay, I/O Riser
+*/
+
 const REST = {
-  mb:   { x: 0,    y: -0.10, z: 0 },
-  ram0: { x: 0.9,  y: -0.012, z: 0.55 },
-  ram1: { x: 1.25, y: -0.012, z: -0.55 },
-  wic0: { x: -1.2, y:  0.00, z: 0.78 },
-  wic1: { x: -1.2, y:  0.00, z: -0.05 },
-  nm:   { x: 0.3,  y:  0.01, z: -0.80 },
-  psu:  { x: 1.6,  y:  0.02, z: -0.90 },
-  fan:  { x: -1.5, y: -0.05, z:  0.15 },
+  mb:   { x:  0.00, y: -0.10, z:  0.00 },
+  ram0: { x:  0.60, y:  0.04, z:  0.52 },
+  ram1: { x:  0.60, y:  0.04, z: -0.28 },
+  wic0: { x: -1.25, y:  0.00, z:  0.80 },
+  wic1: { x: -1.25, y:  0.00, z:  0.10 },
+  nm:   { x:  0.30, y:  0.01, z: -0.78 },
+  psu:  { x: -1.55, y:  0.02, z: -0.88 }, // Rear-LEFT (was right)
+  fan:  { x: -1.50, y: -0.05, z:  0.20 }, // Front-LEFT (was right)
+  hdd:  { x:  1.60, y:  0.00, z:  0.60 },
+  ior:  { x:  0.30, y:  0.04, z:  0.95 },
 }
 
-// Exploded offsets from rest - Enhanced for professional sequence
 const EXPLODED = {
-  mb:   { x: 0,    y: -0.85, z: 0 },     // Down (motherboard drops)
-  ram0: { x: 0.9,  y:  1.65, z: 1.65 }, // Up & Out (spec: Y+8) - adjusted for new base
-  ram1: { x: 1.25, y:  1.65, z: -1.65 }, // Up & Out (spec: Y+8) - adjusted for new base
-  wic0: { x: -1.2, y:  0.45, z: 3.10 }, // Out (spec: Z+10)
-  wic1: { x: -1.2, y:  0.45, z: 2.30 }, // Out (spec: Z+10)
-  nm:   { x: 0.3,  y:  0.45, z: -3.10 }, // Out backward
-  psu:  { x: 1.6,  y:  1.55, z: -0.90 }, // Up significantly (spec: Y+10)
-  fan:  { x: -2.1, y:  0.50, z:  0.15 }, // Out Left (spec: X-5)
+  mb:   { x:  0.00, y: -0.85, z:  0.00 },
+  ram0: { x:  0.60, y:  1.80, z:  2.00 },
+  ram1: { x:  0.60, y:  1.80, z: -2.00 },
+  wic0: { x: -1.25, y:  0.50, z:  3.20 },
+  wic1: { x: -1.25, y:  0.50, z:  2.40 },
+  nm:   { x:  0.30, y:  0.50, z: -3.30 },
+  psu:  { x: -1.55, y:  1.80, z: -0.88 }, // Explode upward
+  fan:  { x: -2.40, y:  0.55, z:  0.20 }, // Explode left-forward
+  hdd:  { x:  1.60, y:  0.60, z:  2.30 },
+  ior:  { x:  0.30, y:  1.40, z:  1.60 }, // Right side, explode forward-up
 }
+
+type ComponentKey = keyof typeof REST
 
 export default function RouterScene({ isCoverOpen, isExploded, selectedComponent, onSelect }: RouterSceneProps) {
   const mbRef   = useRef<THREE.Group>(null)
@@ -48,18 +68,22 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
   const nmRef   = useRef<THREE.Group>(null)
   const psuRef  = useRef<THREE.Group>(null)
   const fanRef  = useRef<THREE.Group>(null)
+  const hddRef  = useRef<THREE.Group>(null)
+  const iorRef  = useRef<THREE.Group>(null)
 
   useEffect(() => {
-    const targets = [
-      { ref: mbRef,   key: 'mb' },
-      { ref: fanRef,  key: 'fan' },    // Fan first (leftmost)
-      { ref: ram0Ref, key: 'ram0' },
-      { ref: ram1Ref, key: 'ram1' },
+    const targets: { ref: React.RefObject<THREE.Group | null>; key: ComponentKey }[] = [
+      { ref: mbRef,   key: 'mb'   },
+      { ref: psuRef,  key: 'psu'  },
+      { ref: fanRef,  key: 'fan'  },
+      { ref: nmRef,   key: 'nm'   },
       { ref: wic0Ref, key: 'wic0' },
       { ref: wic1Ref, key: 'wic1' },
-      { ref: nmRef,   key: 'nm' },
-      { ref: psuRef,  key: 'psu' },
-    ] as const
+      { ref: ram0Ref, key: 'ram0' },
+      { ref: ram1Ref, key: 'ram1' },
+      { ref: hddRef,  key: 'hdd'  },
+      { ref: iorRef,  key: 'ior'  },
+    ]
 
     const tl = gsap.timeline()
     targets.forEach(({ ref, key }, i) => {
@@ -69,9 +93,9 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
         x: dest.x,
         y: dest.y,
         z: dest.z,
-        duration: 0.7,
+        duration: 0.75,
         ease: 'power2.inOut',
-      }, i * 0.065)  // Enhanced stagger timing
+      }, i * 0.07)
     })
 
     return () => { tl.kill() }
@@ -80,7 +104,6 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
   return (
     <group>
       <Chassis isCoverOpen={isCoverOpen} onSelect={onSelect} selectedComponent={selectedComponent} />
-      <FrontBezel onSelect={onSelect} selectedComponent={selectedComponent} />
 
       <group ref={mbRef} position={[REST.mb.x, REST.mb.y, REST.mb.z]}>
         <Motherboard position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
@@ -112,6 +135,14 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
 
       <group ref={fanRef} position={[REST.fan.x, REST.fan.y, REST.fan.z]}>
         <Fan position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
+      </group>
+
+      <group ref={hddRef} position={[REST.hdd.x, REST.hdd.y, REST.hdd.z]}>
+        <HDDBay position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
+      </group>
+
+      <group ref={iorRef} position={[REST.ior.x, REST.ior.y, REST.ior.z]}>
+        <IORiser position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
       <ContactShadows position={[0, -0.22, 0]} opacity={0.55} scale={9} blur={2.5} far={1.2} />

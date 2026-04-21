@@ -61,7 +61,7 @@ const specs: Record<string, ComponentSpec> = {
       },
     ],
   },
-  pcb: {
+  'pcb': {
     label: 'Asosiy Plata / Tizim PCB',
     description: "Protsessor, xotira interfeyslari, WIC uyalari, NM uyasi va Cisco 2600 platformasining barcha avtobus mantig'ini o'z ichiga olgan asosiy tizim platasi.",
     specGroups: [
@@ -92,7 +92,7 @@ const specs: Record<string, ComponentSpec> = {
       },
     ],
   },
-  cpu: {
+  'cpu': {
     label: 'Protsessor — Motorola MPC860',
     description: "Cisco 2600ning asosiy qismi — integratsiyalangan kommunikatsiya kontrolleri bilan ta'minlangan, tarmoqlash uchun optimallashtirilgan PowerPC asosidagi protsessor.",
     specGroups: [
@@ -301,7 +301,7 @@ const specs: Record<string, ComponentSpec> = {
       },
     ],
   },
-  psu: {
+  'psu': {
     label: 'Ichki Quvvat Bloki',
     description: "Barcha tizim qismlariga tartibga solingan DC kuchlanmalarni ta'minlovchi integratsiyalangan kommutatsion quvvat bloki.",
     specGroups: [
@@ -327,6 +327,66 @@ const specs: Record<string, ComponentSpec> = {
         fields: [
           { key: 'Avtomatik Kuchlanma', value: "Ha — 100V dan 240V gacha" },
           { key: 'Sovutish', value: 'Ichki ventilyator bilan' },
+        ],
+      },
+    ],
+  },
+  'hdd-bay': {
+    label: 'Qattiq Disk Uyasi (3.5" IDE)',
+    description: "Cisco 2600XM da ixtiyoriy 3.5 dyuymli IDE qattiq disk uchun maxsus metall uyasi. IOS konsolini va log yozuvlarini saqlash uchun ishlatiladi.",
+    specGroups: [
+      {
+        category: 'JISMONIY',
+        fields: [
+          { key: 'Forma-faktor', value: '3.5" IDE (PATA)', bold: true },
+          { key: "O'lchamlar", value: '8.9cm × 10.2cm × 2.54cm' },
+          { key: 'Mahkamlash', value: 'To\'rtta vintli rel sis.' },
+        ],
+      },
+      {
+        category: 'TEXNIK',
+        fields: [
+          { key: 'Interfeys', value: 'IDE/PATA 40-pin', bold: true },
+          { key: 'Quvvat', value: '4-pin Molex (+5V, +12V)' },
+          { key: 'Maksimal HDD', value: '40 GB (ATA-66)', bold: true },
+          { key: 'Transfer Tezligi', value: '66 MB/s (UDMA Mode 4)' },
+        ],
+      },
+      {
+        category: 'FOYDALANISH',
+        fields: [
+          { key: 'Maqsad', value: 'IOS konsolini saqlash' },
+          { key: 'Ixtiyoriy', value: "Ha — 2600XM da mavjud" },
+          { key: 'Tekshirish', value: 'show disk0: (IOS)' },
+        ],
+      },
+    ],
+  },
+  'io-riser': {
+    label: "I/O Riser / Qo'shimcha Plata",
+    description: "Asosiy plataga perpendikulyar ulanadigan kichik qo'shimcha plata. Old panel I/O ulagichlari (konsol, AUX, ethernet portlari) bilan asosiy platani bog'laydi.",
+    specGroups: [
+      {
+        category: 'JISMONIY',
+        fields: [
+          { key: 'Forma-faktor', value: 'Riser card (qo\'shimcha plata)', bold: true },
+          { key: "O'lchamlar", value: '82mm × 52mm' },
+          { key: 'PCB', value: '4 qatlamli FR4' },
+        ],
+      },
+      {
+        category: 'TEXNIK',
+        fields: [
+          { key: 'Ulanish', value: 'Asosiy plata right-angle ulagich', bold: true },
+          { key: 'I/O Portlari', value: 'Konsol, AUX, Ethernet', bold: true },
+          { key: 'Kuchlanma', value: '3.3V / 5V' },
+        ],
+      },
+      {
+        category: 'FOYDALANISH',
+        fields: [
+          { key: 'Funksiya', value: 'Old panel portlarini yo\'naltiradi' },
+          { key: "Issiq Almashtirish", value: "Yo'q — ta'mirlash uchun" },
         ],
       },
     ],
