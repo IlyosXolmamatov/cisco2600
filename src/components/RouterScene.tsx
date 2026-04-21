@@ -60,8 +60,9 @@ const REST = {
   wic0: { x: -1.20, y:  0.02, z:  0.75, name: 'WIC Slot 0' },
   wic1: { x: -1.20, y:  0.02, z:  0.05, name: 'WIC Slot 1' },
   
-  /* Network Module — Central-Rear, recessed bay with heatsink */
-  nm:   { x:  0.25, y:  0.03, z: -0.75, name: '4-Network Module Slots (NM-1E/NM-4T)' },
+  /* Network Modules — Central-Rear, TWO MODULES SIDE-BY-SIDE */
+  nm0:  { x: -0.32, y:  0.03, z: -0.75, name: '4a-Network Module Slot 0 (NM-1E/NM-4T)' },
+  nm1:  { x:  0.82, y:  0.03, z: -0.75, name: '4b-Network Module Slot 1 (NM-1E/NM-4T)' },
   
   /* Power Supply Unit — Far Left-Rear corner */
   psu:  { x: -1.58, y:  0.00, z: -0.82, name: '1-Power Supply Unit (PSU)' },
@@ -83,7 +84,8 @@ const EXPLODED = {
   ram1: { x:  0.58, y:  1.75, z: -2.10 },
   wic0: { x: -1.20, y:  0.45, z:  3.10 },
   wic1: { x: -1.20, y:  0.45, z:  2.35 },
-  nm:   { x:  0.25, y:  0.50, z: -3.25 },
+  nm0:  { x: -0.32, y:  0.50, z: -3.25 },
+  nm1:  { x:  0.82, y:  0.50, z: -3.25 },
   psu:  { x: -2.40, y:  1.75, z: -0.82 },  // Left-rear, upward + outward
   fan:  { x: -2.50, y:  0.50, z:  0.75 },  // Left-front, forward + outward
   hdd:  { x:  2.50, y:  0.55, z:  2.35 },  // Right, outward + forward
@@ -93,16 +95,17 @@ const EXPLODED = {
 type ComponentKey = keyof typeof REST
 
 export default function RouterScene({ isCoverOpen, isExploded, selectedComponent, onSelect }: RouterSceneProps) {
-  const mbRef   = useRef<THREE.Group>(null)
-  const ram0Ref = useRef<THREE.Group>(null)
-  const ram1Ref = useRef<THREE.Group>(null)
-  const wic0Ref = useRef<THREE.Group>(null)
-  const wic1Ref = useRef<THREE.Group>(null)
-  const nmRef   = useRef<THREE.Group>(null)
-  const psuRef  = useRef<THREE.Group>(null)
-  const fanRef  = useRef<THREE.Group>(null)
-  const hddRef  = useRef<THREE.Group>(null)
-  const iorRef  = useRef<THREE.Group>(null)
+  const mbRef    = useRef<THREE.Group>(null)
+  const ram0Ref  = useRef<THREE.Group>(null)
+  const ram1Ref  = useRef<THREE.Group>(null)
+  const wic0Ref  = useRef<THREE.Group>(null)
+  const wic1Ref  = useRef<THREE.Group>(null)
+  const nm0Ref   = useRef<THREE.Group>(null)
+  const nm1Ref   = useRef<THREE.Group>(null)
+  const psuRef   = useRef<THREE.Group>(null)
+  const fanRef   = useRef<THREE.Group>(null)
+  const hddRef   = useRef<THREE.Group>(null)
+  const iorRef   = useRef<THREE.Group>(null)
   const wiringRef = useRef<THREE.Group>(null)
 
   useEffect(() => {
@@ -110,7 +113,8 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
       { ref: mbRef,   key: 'mb'   },
       { ref: psuRef,  key: 'psu'  },
       { ref: fanRef,  key: 'fan'  },
-      { ref: nmRef,   key: 'nm'   },
+      { ref: nm0Ref,  key: 'nm0'  },
+      { ref: nm1Ref,  key: 'nm1'  },
       { ref: wic0Ref, key: 'wic0' },
       { ref: wic1Ref, key: 'wic1' },
       { ref: ram0Ref, key: 'ram0' },
@@ -160,8 +164,11 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
         <WICCard position={[0, 0, 0]} slotIndex={1} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      {/* ═══════════ NETWORK MODULE — Component #4 ═══════════ */}
-      <group ref={nmRef} position={[REST.nm.x, REST.nm.y, REST.nm.z]} name={REST.nm.name}>
+      {/* ═══════════ NETWORK MODULES — Component #4 (TWO SIDE-BY-SIDE) ═══════════ */}
+      <group ref={nm0Ref} position={[REST.nm0.x, REST.nm0.y, REST.nm0.z]} name={REST.nm0.name}>
+        <NMModule position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
+      </group>
+      <group ref={nm1Ref} position={[REST.nm1.x, REST.nm1.y, REST.nm1.z]} name={REST.nm1.name}>
         <NMModule position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
