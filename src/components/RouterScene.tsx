@@ -187,47 +187,22 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
 
       {/* ═══════════ PROCEDURAL WIRING — PSU to Motherboard ═══════════ */}
       <group ref={wiringRef} name="internal-wiring">
-        {/* Main power harness (Red/Yellow/Black twisted pair) */}
-        {/* Red wire: +12V */}
-        <mesh>
-          <tubeGeometry args={[
-            [
-              [-1.55, 0.15, -0.82],  // From PSU
-              [-0.80, 0.25, -0.40],  // Path elevation
-              [-0.20, 0.15, 0.10],   // To motherboard power header
-            ] as any,
-            0.008,  // radius
-            8,      // radialSegments
-          ]} />
-          <meshStandardMaterial color="#ff2222" metalness={0.4} roughness={0.8} />
-        </mesh>
-        
-        {/* Yellow wire: +5V */}
-        <mesh>
-          <tubeGeometry args={[
-            [
-              [-1.55, 0.12, -0.82],  // From PSU
-              [-0.70, 0.20, -0.35],  // Path elevation (slightly lower)
-              [-0.15, 0.10, 0.12],   // To motherboard
-            ] as any,
-            0.008,
-            8,
-          ]} />
-          <meshStandardMaterial color="#ffdd22" metalness={0.4} roughness={0.8} />
+        {/* Red wire (+12V) — PSU to Motherboard */}
+        <mesh position={[-0.875, 0.15, -0.36]}>
+          <boxGeometry args={[2.2, 0.009, 0.009]} />
+          <meshStandardMaterial color="#ff3333" metalness={0.5} roughness={0.7} />
         </mesh>
 
-        {/* Black wire: Ground */}
-        <mesh>
-          <tubeGeometry args={[
-            [
-              [-1.55, 0.08, -0.82],  // From PSU
-              [-0.60, 0.15, -0.30],  // Path elevation
-              [-0.10, 0.05, 0.15],   // To motherboard ground
-            ] as any,
-            0.008,
-            8,
-          ]} />
-          <meshStandardMaterial color="#1a1a1a" metalness={0.3} roughness={0.9} />
+        {/* Yellow wire (+5V) — PSU to Motherboard */}
+        <mesh position={[-0.825, 0.11, -0.35]}>
+          <boxGeometry args={[2.1, 0.009, 0.009]} />
+          <meshStandardMaterial color="#ffdd22" metalness={0.5} roughness={0.7} />
+        </mesh>
+
+        {/* Black wire (Ground) — PSU to Motherboard */}
+        <mesh position={[-0.775, 0.065, -0.3375]}>
+          <boxGeometry args={[2.0, 0.009, 0.009]} />
+          <meshStandardMaterial color="#1a1a1a" metalness={0.35} roughness={0.9} />
         </mesh>
       </group>
 
