@@ -69,6 +69,14 @@ export default function App() {
     setRearSel(null)
   }
 
+  const handleRearCoverToggle = () => {
+    setRearCoverOpen(v => !v)
+    // Qopqoq yopilganda modalni yopib qo'yish
+    if (rearCoverOpen) {
+      setRearSel(null)
+    }
+  }
+
   const routerSelected = routerSel ? specs[routerSel] : null
   const rearSelected   = rearSel   ? rearSpecs[rearSel] : null
 

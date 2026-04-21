@@ -131,6 +131,7 @@ const RearPanelScene = forwardRef<RearPanelSceneHandle, RearPanelSceneProps>(
         <group
           ref={topCoverRef}
           position={[0, PANEL_H / 2 + 0.025, -0.02]}
+          visible={coverOpen}
         >
           <mesh castShadow>
             <boxGeometry args={[PANEL_W - 0.1, 0.05, 0.05]} />

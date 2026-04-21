@@ -272,31 +272,65 @@ const specs: Record<string, ComponentSpec> = {
       },
     ],
   },
-  'nm-module': {
-    label: 'Tarmoq Moduli (NM) Uyasi',
-    description: "Ethernet, Token Ring, ATM, ovoz yoki VPN tezlashtirish modullarini qo'llab-quvvatlovchi yuqori o'tkazuvchanlikli NM uyasi.",
+  'nm-module-0': {
+    label: 'NM Uyasi 0 — NM-1FE-TX (4a)',
+    description: "Birinchi tarmoq moduli uyasi. NM-1FE-TX bilan 100 Mbps FastEthernet ta'minlaydi. Cisco IQ yuqori tezlikli avtobus orqali asosiy plataga ulangan. Pozitsiya: [-0.32, 0.03, -0.75].",
     specGroups: [
       {
         category: 'JISMONIY',
         fields: [
-          { key: 'Modul Turi', value: 'NM-1E / NM-4E / NM-1FE-TX', bold: true },
-          { key: 'Quvvat', value: '5V / 3.3V' },
-          { key: 'Uyasi', value: '1 × NM uyasi' },
+          { key: 'Uyasi', value: '4a — Chap-markaziy orqa', bold: true },
+          { key: 'Modul Turi', value: 'NM-1FE-TX / NM-1E / NM-4E', bold: true },
+          { key: 'Quvvat', value: '5V / 3.3V (tizimdan)' },
+          { key: 'Rang', value: 'Yashil PCB, kumush bracket' },
         ],
       },
       {
         category: 'TEXNIK',
         fields: [
           { key: 'Avtobus', value: 'Cisco IQ Yuqori Tezlikli Avtobus', bold: true },
-          { key: "Maksimal O'tkazuvchanlik", value: '100 Mbps', bold: true },
-          { key: 'Interfeys', value: "10/100 Ethernet (modulga bog'liq)" },
+          { key: "Maksimal O'tkazuvchanlik", value: '100 Mbps FastEthernet', bold: true },
+          { key: 'Port Soni', value: '1 × RJ-45 (FastEthernet)' },
+          { key: 'Duplex', value: "To'liq/yarim dupleks (auto)" },
         ],
       },
       {
         category: 'FOYDALANISH',
         fields: [
+          { key: 'IOS Interfeysi', value: 'FastEthernet1/0', bold: true },
+          { key: 'Konfiguratsiya', value: 'interface FastEthernet1/0' },
+          { key: "Issiq Almashtirish", value: "Yo'q — qayta yuklash kerak" },
+        ],
+      },
+    ],
+  },
+  'nm-module-1': {
+    label: 'NM Uyasi 1 — NM-4T (4b)',
+    description: "Ikkinchi tarmoq moduli uyasi. NM-4T bilan 4 portli sinxron seriyali WAN ulanishlarini ta'minlaydi. WAN aggregatsiyasi uchun ideal. Pozitsiya: [0.82, 0.03, -0.75].",
+    specGroups: [
+      {
+        category: 'JISMONIY',
+        fields: [
+          { key: 'Uyasi', value: '4b — O\'ng-markaziy orqa', bold: true },
+          { key: 'Modul Turi', value: 'NM-4T / NM-2W / NM-1A-T3', bold: true },
+          { key: 'Quvvat', value: '5V / 3.3V (tizimdan)' },
+        ],
+      },
+      {
+        category: 'TEXNIK',
+        fields: [
+          { key: 'Avtobus', value: 'Cisco IQ Yuqori Tezlikli Avtobus', bold: true },
+          { key: 'Port Soni', value: '4 × Smart Serial (seriyali)', bold: true },
+          { key: 'Maksimal Tezlik', value: '8 Mbps / port (seriyali)', bold: true },
+          { key: 'Inkapsulyatsiya', value: 'HDLC / PPP / Frame Relay' },
+        ],
+      },
+      {
+        category: 'FOYDALANISH',
+        fields: [
+          { key: 'IOS Interfeysi', value: 'Serial1/0 — Serial1/3', bold: true },
+          { key: 'DTE/DCE', value: 'show controllers serial1/x' },
           { key: "Issiq Almashtirish", value: "Yo'q" },
-          { key: 'Kengaytirish Imkoniyati', value: 'LAN / WAN / Ovoz / VPN' },
         ],
       },
     ],

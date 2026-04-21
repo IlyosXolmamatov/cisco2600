@@ -159,13 +159,14 @@ export function WICCard({ position, slotIndex, onSelect, selectedComponent }: WI
    ═══════════════════════════════════════════════════════ */
 interface NMProps {
   position: [number, number, number]
+  slotIndex: number
   onSelect: (id: string) => void
   selectedComponent: string | null
 }
 
-export function NMModule({ position, onSelect, selectedComponent }: NMProps) {
+export function NMModule({ position, slotIndex, onSelect, selectedComponent }: NMProps) {
   const [hovered, setHovered] = useState(false)
-  const id = 'nm-module'
+  const id = `nm-module-${slotIndex}`
   const isSelected = selectedComponent === id
 
   return (
@@ -175,27 +176,33 @@ export function NMModule({ position, onSelect, selectedComponent }: NMProps) {
       onPointerOut={() => setHovered(false)}
       onClick={(e) => { e.stopPropagation(); onSelect(id) }}
     >
-      {/* Main PCB */}
+      {/* Main PCB — light green NM slot color */}
       <mesh castShadow>
         <boxGeometry args={[1.42, 0.06, 1.12]} />
         <meshStandardMaterial
-          color={hovered || isSelected ? '#3a4a6a' : '#1a2a4a'}
-          metalness={0.3} roughness={0.6}
-          emissive={hovered || isSelected ? '#0a0a3a' : '#000000'}
+          color={hovered || isSelected ? '#2a6040' : '#1a4030'}
+          metalness={0.18} roughness={0.72}
+          emissive={hovered || isSelected ? '#0a2a18' : '#000000'}
           emissiveIntensity={hovered ? 0.4 : isSelected ? 0.7 : 0}
         />
       </mesh>
-      {/* PCB traces */}
-      {Array.from({ length: 8 }).map((_, i) => (
-        <mesh key={`trace-${i}`} position={[0, 0.031, -0.45 + i * 0.13]}>
-          <boxGeometry args={[1.35, 0.003, 0.006]} />
-          <meshStandardMaterial color="#c8a830" metalness={0.95} roughness={0.08} />
+      {/* PCB traces — copper */}
+      {Array.from({ length: 10 }).map((_, i) => (
+        <mesh key={`trace-h-${i}`} position={[0, 0.031, -0.50 + i * 0.11]}>
+          <boxGeometry args={[1.35, 0.003, 0.005]} />
+          <meshStandardMaterial color="#c8a030" metalness={0.96} roughness={0.07} />
         </mesh>
       ))}
-      {/* Front bracket — brushed metal */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <mesh key={`trace-v-${i}`} position={[-0.60 + i * 0.18, 0.031, 0]}>
+          <boxGeometry args={[0.005, 0.003, 1.08]} />
+          <meshStandardMaterial color="#c8a030" metalness={0.96} roughness={0.07} />
+        </mesh>
+      ))}
+      {/* Front bracket — brushed aluminum (NM slot bracket) */}
       <mesh position={[0, 0.055, 0.576]}>
         <boxGeometry args={[1.42, 0.14, 0.024]} />
-        <meshStandardMaterial color="#5a5a6a" metalness={0.85} roughness={0.2} />
+        <meshStandardMaterial color="#7a7a8a" metalness={0.90} roughness={0.15} />
       </mesh>
       {/* Ports row — 4 RJ-45 */}
       {[-0.42, -0.14, 0.14, 0.42].map((x, i) => (
@@ -298,22 +305,29 @@ export function PSU({ position, onSelect, selectedComponent }: PSUProps) {
       onPointerOut={() => setHovered(false)}
       onClick={(e) => { e.stopPropagation(); onSelect(id) }}
     >
-      {/* Main PSU housing — steel case */}
+      {/* Main PSU housing — brushed silver steel */}
       <mesh castShadow>
         <boxGeometry args={[0.92, 0.32, 0.78]} />
         <meshStandardMaterial
-          color={hovered || isSelected ? '#6a6a7a' : '#484858'}
-          metalness={0.88}
-          roughness={0.14}
-          emissive={hovered || isSelected ? '#222233' : '#000000'}
-          emissiveIntensity={hovered ? 0.35 : isSelected ? 0.65 : 0}
+          color={hovered || isSelected ? '#bac4d0' : '#9aa4b2'}
+          metalness={0.92}
+          roughness={0.12}
+          emissive={hovered || isSelected ? '#2a3040' : '#000000'}
+          emissiveIntensity={hovered ? 0.2 : isSelected ? 0.4 : 0}
         />
       </mesh>
+      {/* Brushed texture direction lines (simulate anisotropic brush) */}
+      {Array.from({ length: 16 }).map((_, i) => (
+        <mesh key={`brush-${i}`} position={[0, -0.14 + i * 0.019, 0.391]}>
+          <boxGeometry args={[0.88, 0.004, 0.003]} />
+          <meshStandardMaterial color="#8898a8" metalness={0.98} roughness={0.05} />
+        </mesh>
+      ))}
       {/* Top vents — stamped louvers */}
       {Array.from({ length: 10 }).map((_, i) => (
         <mesh key={`vent-top-${i}`} position={[-0.30 + i * 0.065, 0.162, 0.1]}>
           <boxGeometry args={[0.042, 0.006, 0.55]} />
-          <meshStandardMaterial color="#2a2a2a" metalness={0.3} roughness={0.8} />
+          <meshStandardMaterial color="#3a3a4a" metalness={0.5} roughness={0.6} />
         </mesh>
       ))}
       {/* Front panel — label area */}
@@ -389,52 +403,74 @@ export function HDDBay({ position, onSelect, selectedComponent }: HDDBayProps) {
       onPointerOut={() => setHovered(false)}
       onClick={(e) => { e.stopPropagation(); onSelect(id) }}
     >
-      {/* Bay housing frame */}
-      <mesh castShadow>
-        <boxGeometry args={[0.88, 0.27, 0.68]} />
+      {/* ── Hollow skeletal cage frame ── */}
+      {/* Top rail */}
+      <mesh castShadow position={[0, 0.135, 0]}>
+        <boxGeometry args={[0.88, 0.012, 0.68]} />
         <meshStandardMaterial
-          color={hovered || isSelected ? '#5a5a6a' : '#404050'}
-          metalness={0.82}
-          roughness={0.22}
+          color={hovered || isSelected ? '#8a8a9a' : '#666677'}
+          metalness={0.88} roughness={0.18}
           emissive={hovered || isSelected ? '#1a1a2a' : '#000000'}
-          emissiveIntensity={hovered ? 0.3 : isSelected ? 0.5 : 0}
+          emissiveIntensity={hovered ? 0.2 : isSelected ? 0.4 : 0}
         />
       </mesh>
-      {/* HDD disk body inside bay */}
-      <mesh position={[0, 0, 0.01]}>
-        <boxGeometry args={[0.78, 0.19, 0.60]} />
-        <meshStandardMaterial color="#1a1a28" metalness={0.92} roughness={0.08} />
+      {/* Bottom rail */}
+      <mesh castShadow position={[0, -0.135, 0]}>
+        <boxGeometry args={[0.88, 0.012, 0.68]} />
+        <meshStandardMaterial color={hovered || isSelected ? '#8a8a9a' : '#666677'} metalness={0.88} roughness={0.18} />
       </mesh>
-      {/* HDD platter window (label) */}
-      <mesh position={[0, 0.100, 0]}>
-        <boxGeometry args={[0.55, 0.003, 0.42]} />
-        <meshStandardMaterial color="#ddddcc" metalness={0.05} roughness={0.9} />
+      {/* Left side rail */}
+      <mesh castShadow position={[-0.436, 0, 0]}>
+        <boxGeometry args={[0.012, 0.27, 0.68]} />
+        <meshStandardMaterial color={hovered || isSelected ? '#8a8a9a' : '#666677'} metalness={0.88} roughness={0.18} />
       </mesh>
-      {/* IDE connector at rear */}
-      <mesh position={[0, 0, -0.344]}>
-        <boxGeometry args={[0.42, 0.08, 0.015]} />
-        <meshStandardMaterial color="#333344" metalness={0.6} roughness={0.5} />
+      {/* Right side rail */}
+      <mesh castShadow position={[0.436, 0, 0]}>
+        <boxGeometry args={[0.012, 0.27, 0.68]} />
+        <meshStandardMaterial color={hovered || isSelected ? '#8a8a9a' : '#666677'} metalness={0.88} roughness={0.18} />
       </mesh>
-      {/* Power connector at rear */}
-      <mesh position={[0.32, 0, -0.344]}>
-        <boxGeometry args={[0.14, 0.075, 0.015]} />
-        <meshStandardMaterial color="#ddddcc" metalness={0.2} roughness={0.8} />
+      {/* Front face bar (top) */}
+      <mesh position={[0, 0.08, 0.344]}>
+        <boxGeometry args={[0.88, 0.025, 0.012]} />
+        <meshStandardMaterial color="#555566" metalness={0.85} roughness={0.2} />
       </mesh>
-      {/* Mounting rails — left */}
-      <mesh position={[-0.45, 0, 0]} castShadow>
-        <boxGeometry args={[0.018, 0.21, 0.58]} />
-        <meshStandardMaterial color="#666677" metalness={0.75} roughness={0.25} />
+      {/* Front face bar (bottom) */}
+      <mesh position={[0, -0.08, 0.344]}>
+        <boxGeometry args={[0.88, 0.025, 0.012]} />
+        <meshStandardMaterial color="#555566" metalness={0.85} roughness={0.2} />
       </mesh>
-      {/* Mounting rails — right */}
-      <mesh position={[0.45, 0, 0]} castShadow>
-        <boxGeometry args={[0.018, 0.21, 0.58]} />
-        <meshStandardMaterial color="#666677" metalness={0.75} roughness={0.25} />
+      {/* Rear cross-brace */}
+      <mesh position={[0, 0, -0.340]}>
+        <boxGeometry args={[0.86, 0.245, 0.010]} />
+        <meshStandardMaterial color="#444455" metalness={0.85} roughness={0.2} />
       </mesh>
-      {/* Spindle motor indicator (circle) */}
-      <mesh position={[0.25, 0.100, 0.12]}>
-        <cylinderGeometry args={[0.055, 0.055, 0.005, 16]} />
-        <meshStandardMaterial color="#aaaaaa" metalness={0.95} roughness={0.08} />
+      {/* HDD disk inside the cage */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[0.76, 0.200, 0.58]} />
+        <meshStandardMaterial color="#111118" metalness={0.94} roughness={0.06} />
       </mesh>
+      {/* HDD label */}
+      <mesh position={[0, 0.102, 0]}>
+        <boxGeometry args={[0.52, 0.004, 0.38]} />
+        <meshStandardMaterial color="#ddddc8" metalness={0.04} roughness={0.92} />
+      </mesh>
+      {/* IDE 40-pin connector */}
+      <mesh position={[-0.08, 0, -0.342]}>
+        <boxGeometry args={[0.38, 0.078, 0.012]} />
+        <meshStandardMaterial color="#2a2a3a" metalness={0.6} roughness={0.5} />
+      </mesh>
+      {/* 4-pin Molex power */}
+      <mesh position={[0.30, 0, -0.342]}>
+        <boxGeometry args={[0.13, 0.072, 0.012]} />
+        <meshStandardMaterial color="#e8e8d8" metalness={0.1} roughness={0.8} />
+      </mesh>
+      {/* Chassis screw holes — 4 corners */}
+      {[[-0.36, 0.10], [0.36, 0.10], [-0.36, -0.10], [0.36, -0.10]].map(([x, y], i) => (
+        <mesh key={`screw-${i}`} position={[x, y, 0.346]}>
+          <cylinderGeometry args={[0.012, 0.012, 0.014, 8]} />
+          <meshStandardMaterial color="#333333" metalness={0.9} roughness={0.1} />
+        </mesh>
+      ))}
     </group>
   )
 }

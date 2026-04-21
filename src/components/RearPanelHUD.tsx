@@ -6,6 +6,7 @@ interface RearPanelHUDProps {
   rearCoverOpen: boolean
   onCoverToggle: () => void
   onReset: () => void
+  onClearSelection?: () => void
 }
 
 const CATEGORY_STYLE: Record<string, { label: string; color: string; bg: string }> = {
@@ -54,6 +55,7 @@ export default function RearPanelHUD({
   rearCoverOpen,
   onCoverToggle,
   onReset,
+  onClearSelection,
 }: RearPanelHUDProps) {
   const selectedSpec = selectedId && rearPanelSpecs[selectedId]
 
@@ -91,9 +93,18 @@ export default function RearPanelHUD({
         {selectedSpec ? (
           <div className="bg-gray-900/90 backdrop-blur border-2 border-cyan-500 rounded-lg p-4 max-w-md shadow-2xl">
             {/* Header */}
-            <div className="border-b border-cyan-600 pb-3 mb-3">
-              <div className="text-cyan-400 font-bold text-sm">{selectedSpec.label}</div>
-              <div className="text-gray-400 text-xs mt-1">{selectedSpec.category}</div>
+            <div className="border-b border-cyan-600 pb-3 mb-3 flex justify-between items-start">
+              <div>
+                <div className="text-cyan-400 font-bold text-sm">{selectedSpec.label}</div>
+                <div className="text-gray-400 text-xs mt-1">{selectedSpec.category}</div>
+              </div>
+              <button
+                onClick={() => onClearSelection?.()}
+                className="text-gray-400 hover:text-cyan-400 transition-colors text-lg leading-none"
+                title="Yopish"
+              >
+                ✕
+              </button>
             </div>
 
             {/* Description */}

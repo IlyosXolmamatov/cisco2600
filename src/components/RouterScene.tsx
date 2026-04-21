@@ -52,10 +52,6 @@ const REST = {
   /* Motherboard PCB — Central floor, 80% coverage */
   mb:   { x:  0.00, y: -0.12, z:  0.00, name: '3-System/Motherboard' },
   
-  /* RAM DIMMs — Central-Front, vertical slots */
-  ram0: { x:  0.58, y:  0.06, z:  0.52, name: '5-DRAM DIMM Slot 0' },
-  ram1: { x:  0.58, y:  0.06, z:  -0.32, name: '5-DRAM DIMM Slot 1' },
-  
   /* WIC Cards — Left section (currently not in reference, kept for compatibility) */
   wic0: { x: -1.20, y:  0.02, z:  0.75, name: 'WIC Slot 0' },
   wic1: { x: -1.20, y:  0.02, z:  0.05, name: 'WIC Slot 1' },
@@ -80,8 +76,6 @@ const REST = {
 const EXPLODED = {
   /* Exploded offsets for disassembly view (Y-axis primary, staggered) */
   mb:   { x:  0.00, y: -0.90, z:  0.00 },
-  ram0: { x:  0.58, y:  1.75, z:  2.00 },
-  ram1: { x:  0.58, y:  1.75, z: -2.10 },
   wic0: { x: -1.20, y:  0.45, z:  3.10 },
   wic1: { x: -1.20, y:  0.45, z:  2.35 },
   nm0:  { x: -0.32, y:  0.50, z: -3.25 },
@@ -96,8 +90,6 @@ type ComponentKey = keyof typeof REST
 
 export default function RouterScene({ isCoverOpen, isExploded, selectedComponent, onSelect }: RouterSceneProps) {
   const mbRef    = useRef<THREE.Group>(null)
-  const ram0Ref  = useRef<THREE.Group>(null)
-  const ram1Ref  = useRef<THREE.Group>(null)
   const wic0Ref  = useRef<THREE.Group>(null)
   const wic1Ref  = useRef<THREE.Group>(null)
   const nm0Ref   = useRef<THREE.Group>(null)
@@ -117,8 +109,6 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
       { ref: nm1Ref,  key: 'nm1'  },
       { ref: wic0Ref, key: 'wic0' },
       { ref: wic1Ref, key: 'wic1' },
-      { ref: ram0Ref, key: 'ram0' },
-      { ref: ram1Ref, key: 'ram1' },
       { ref: hddRef,  key: 'hdd'  },
       { ref: iorRef,  key: 'ior'  },
     ]
@@ -148,14 +138,6 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
         <Motherboard position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
-      {/* ═══════════ RAM DIMM SLOTS — Component #5 ═══════════ */}
-      <group ref={ram0Ref} position={[REST.ram0.x, REST.ram0.y, REST.ram0.z]} name={REST.ram0.name}>
-        <RAM position={[0, 0, 0]} slotIndex={0} onSelect={onSelect} selectedComponent={selectedComponent} />
-      </group>
-      <group ref={ram1Ref} position={[REST.ram1.x, REST.ram1.y, REST.ram1.z]} name={REST.ram1.name}>
-        <RAM position={[0, 0, 0]} slotIndex={1} onSelect={onSelect} selectedComponent={selectedComponent} />
-      </group>
-
       {/* ═══════════ WIC CARDS (Legacy, kept for backward compatibility) ═══════════ */}
       <group ref={wic0Ref} position={[REST.wic0.x, REST.wic0.y, REST.wic0.z]} name={REST.wic0.name}>
         <WICCard position={[0, 0, 0]} slotIndex={0} onSelect={onSelect} selectedComponent={selectedComponent} />
@@ -166,10 +148,10 @@ export default function RouterScene({ isCoverOpen, isExploded, selectedComponent
 
       {/* ═══════════ NETWORK MODULES — Component #4 (TWO SIDE-BY-SIDE) ═══════════ */}
       <group ref={nm0Ref} position={[REST.nm0.x, REST.nm0.y, REST.nm0.z]} name={REST.nm0.name}>
-        <NMModule position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
+        <NMModule position={[0, 0, 0]} slotIndex={0} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
       <group ref={nm1Ref} position={[REST.nm1.x, REST.nm1.y, REST.nm1.z]} name={REST.nm1.name}>
-        <NMModule position={[0, 0, 0]} onSelect={onSelect} selectedComponent={selectedComponent} />
+        <NMModule position={[0, 0, 0]} slotIndex={1} onSelect={onSelect} selectedComponent={selectedComponent} />
       </group>
 
       {/* ═══════════ POWER SUPPLY UNIT — Component #1 ═══════════ */}

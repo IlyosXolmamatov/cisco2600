@@ -48,7 +48,7 @@ export default function Motherboard({ position, onSelect, selectedComponent }: M
   return (
     <group position={position}>
 
-      {/* ── PCB Base — dark green FR4 ── */}
+      {/* ── PCB Base — FR4 dark green, satin finish ── */}
       <mesh
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true) }}
         onPointerOut={() => setHovered(false)}
@@ -58,40 +58,67 @@ export default function Motherboard({ position, onSelect, selectedComponent }: M
       >
         <boxGeometry args={[4.0, 0.04, 2.6]} />
         <meshStandardMaterial
-          color={hovered || selectedComponent === 'pcb' ? '#1e5a2e' : '#0d3d1a'}
-          metalness={0.15}
-          roughness={0.8}
-          emissive={hovered || selectedComponent === 'pcb' ? '#1a4a2a' : '#000000'}
-          emissiveIntensity={hovered ? 0.3 : selectedComponent === 'pcb' ? 0.5 : 0}
+          color={hovered || selectedComponent === 'pcb' ? '#1c5228' : '#0b3d18'}
+          metalness={0.08}
+          roughness={0.72}
+          emissive={hovered || selectedComponent === 'pcb' ? '#183a20' : '#000000'}
+          emissiveIntensity={hovered ? 0.28 : selectedComponent === 'pcb' ? 0.48 : 0}
         />
       </mesh>
 
-      {/* ── Copper trace grid — horizontal ── */}
-      {Array.from({ length: 18 }).map((_, i) => (
-        <mesh key={`htr-${i}`} position={[-1.9 + i * 0.22, 0.022, 0]}>
-          <boxGeometry args={[0.012, 0.003, 2.52]} />
-          <meshStandardMaterial color="#c8a030" metalness={0.96} roughness={0.07} />
+      {/* ── Solder mask layer (subtle green sheen coat) ── */}
+      <mesh position={[0, 0.021, 0]}>
+        <boxGeometry args={[3.98, 0.002, 2.58]} />
+        <meshStandardMaterial color="#0f4820" metalness={0.0} roughness={0.55} transparent opacity={0.55} />
+      </mesh>
+
+      {/* ── Copper trace grid — horizontal (dense) ── */}
+      {Array.from({ length: 24 }).map((_, i) => (
+        <mesh key={`htr-${i}`} position={[-1.90 + i * 0.165, 0.022, 0]}>
+          <boxGeometry args={[0.010, 0.003, 2.52]} />
+          <meshStandardMaterial color="#c8a030" metalness={0.97} roughness={0.06} />
         </mesh>
       ))}
-      {/* ── Copper trace grid — vertical ── */}
-      {Array.from({ length: 14 }).map((_, i) => (
-        <mesh key={`vtr-${i}`} position={[0, 0.022, -1.28 + i * 0.20]}>
-          <boxGeometry args={[3.95, 0.003, 0.012]} />
-          <meshStandardMaterial color="#c8a030" metalness={0.96} roughness={0.07} />
+      {/* ── Copper trace grid — vertical (dense) ── */}
+      {Array.from({ length: 18 }).map((_, i) => (
+        <mesh key={`vtr-${i}`} position={[0, 0.022, -1.28 + i * 0.148]}>
+          <boxGeometry args={[3.96, 0.003, 0.010]} />
+          <meshStandardMaterial color="#c8a030" metalness={0.97} roughness={0.06} />
+        </mesh>
+      ))}
+      {/* ── Power plane traces — wider copper fills ── */}
+      {[[-1.5, 0.8], [0.5, -0.5], [1.5, 0.2]].map(([x, z], i) => (
+        <mesh key={`pwr-${i}`} position={[x, 0.0215, z]}>
+          <boxGeometry args={[0.6, 0.002, 0.4]} />
+          <meshStandardMaterial color="#b89020" metalness={0.92} roughness={0.10} transparent opacity={0.7} />
         </mesh>
       ))}
 
-      {/* ── Solder via pads ── */}
-      {Array.from({ length: 30 }).map((_, i) => {
-        const x = -1.85 + (i % 6) * 0.74
-        const z = -1.10 + Math.floor(i / 6) * 0.55
+      {/* ── Solder via pads (gold ring pads) ── */}
+      {Array.from({ length: 42 }).map((_, i) => {
+        const x = -1.85 + (i % 7) * 0.62
+        const z = -1.10 + Math.floor(i / 7) * 0.37
         return (
-          <mesh key={`via-${i}`} position={[x, 0.023, z]}>
-            <cylinderGeometry args={[0.030, 0.030, 0.002, 6]} />
-            <meshStandardMaterial color="#c8a830" metalness={0.98} roughness={0.04} />
+          <mesh key={`via-${i}`} position={[x, 0.0225, z]}>
+            <cylinderGeometry args={[0.028, 0.028, 0.002, 6]} />
+            <meshStandardMaterial color="#d4aa20" metalness={0.98} roughness={0.03} />
           </mesh>
         )
       })}
+
+      {/* ── Silkscreen layer — white component outlines ── */}
+      {/* CPU outline */}
+      <mesh position={[-0.5, 0.0225, 0.25]}>
+        <boxGeometry args={[0.52, 0.001, 0.52]} />
+        <meshStandardMaterial color="#dddddd" metalness={0} roughness={1} transparent opacity={0.5} />
+      </mesh>
+      {/* U-designators (white dots for IC positions) */}
+      {([[-0.5, 0.25], [0.55, -0.75], [-0.15, -0.78], [0.3, 0.80], [0.85, 0.45]] as [number,number][]).map(([x, z], i) => (
+        <mesh key={`silk-${i}`} position={[x, 0.0225, z]}>
+          <boxGeometry args={[0.08, 0.001, 0.04]} />
+          <meshStandardMaterial color="#f0f0f0" metalness={0} roughness={1} transparent opacity={0.6} />
+        </mesh>
+      ))}
 
       {/* ════════ CPU — Motorola MPC860 (center-left) ════════ */}
       <PCBChip

@@ -55,9 +55,9 @@ export default function Chassis({ isCoverOpen, onSelect, selectedComponent }: Ch
   const D = 3.01
   const T = 0.03
 
-  const BODY  = '#525c68'
-  const DARK  = '#3d4550'
-  const BEZEL = '#4a5360'
+  const BODY  = '#525c68'   // slate grey chassis body
+  const DARK  = '#3d4550'   // darker slate for walls/base
+  const BEZEL = '#1a3535'   // matte dark-teal plastic bezel
 
   const coverRotX   = isCoverOpen ? Math.PI / 2 : 0
   const coverPivotZ = -D / 2
@@ -99,15 +99,15 @@ export default function Chassis({ isCoverOpen, onSelect, selectedComponent }: Ch
       </mesh>
 
       {/* ════════ Front Bezel ════════ */}
-      {/* Main bezel plate */}
+      {/* Main bezel plate — matte dark-teal plastic */}
       <mesh position={[0, 0, D / 2 - T / 2]} castShadow receiveShadow>
         <boxGeometry args={[W - T * 2, H - T * 2, T]} />
-        <meshStandardMaterial color={BEZEL} metalness={0.72} roughness={0.28} />
+        <meshStandardMaterial color={BEZEL} metalness={0.04} roughness={0.88} />
       </mesh>
-      {/* Recessed center panel */}
+      {/* Recessed center inset — slightly lighter teal */}
       <mesh position={[0, 0, D / 2 - T / 2 + 0.002]}>
         <boxGeometry args={[W - T * 2 - 0.38, H - T * 2 - 0.04, 0.004]} />
-        <meshStandardMaterial color={BODY} metalness={0.75} roughness={0.32} />
+        <meshStandardMaterial color="#223c3c" metalness={0.03} roughness={0.90} />
       </mesh>
 
       {/* Console port recess */}
@@ -150,32 +150,10 @@ export default function Chassis({ isCoverOpen, onSelect, selectedComponent }: Ch
         <meshStandardMaterial color="#7a8898" metalness={0} roughness={0.9} />
       </mesh>
 
-      {/* ── LED housing bezel ── */}
-      <mesh position={[2.10, 0.04, D / 2 + 0.008]}>
-        <boxGeometry args={[0.058, 0.165, 0.012]} />
-        <meshStandardMaterial color="#1a1a2a" metalness={0.5} roughness={0.6} />
-      </mesh>
-      {/* POWER LED — Green (always on) */}
-      <mesh position={[2.10, 0.09, D / 2 + 0.013]}>
-        <sphereGeometry args={[0.020, 16, 16]} />
-        <meshStandardMaterial color="#00ff44" emissive="#00ff44" emissiveIntensity={2.8} metalness={0.2} roughness={0.3} />
-      </mesh>
-      <pointLight position={[2.10, 0.09, D / 2 + 0.02]} intensity={0.9} color="#00ff44" distance={1.3} decay={2} />
-      {/* SYS LED — Amber */}
-      <mesh position={[2.10, 0.04, D / 2 + 0.013]}>
-        <sphereGeometry args={[0.020, 16, 16]} />
-        <meshStandardMaterial color="#ffcc00" emissive="#ffcc00" emissiveIntensity={1.8} metalness={0.2} roughness={0.3} />
-      </mesh>
-      <pointLight position={[2.10, 0.04, D / 2 + 0.02]} intensity={0.5} color="#ffcc00" distance={1.0} decay={2} />
-      {/* ACTIVITY LED — Red */}
-      <mesh position={[2.10, -0.01, D / 2 + 0.013]}>
-        <sphereGeometry args={[0.020, 16, 16]} />
-        <meshStandardMaterial color="#ff3322" emissive="#ff3322" emissiveIntensity={1.6} metalness={0.2} roughness={0.3} />
-      </mesh>
-      <pointLight position={[2.10, -0.01, D / 2 + 0.02]} intensity={0.45} color="#ff4433" distance={0.9} decay={2} />
+
 
       {/* ════════ Top Cover ════════ */}
-      <group position={[0, H / 2 - T / 2, coverPivotZ]} rotation={[coverRotX, 0, 0]}>
+      <group position={[0, H / 2 - T / 2, coverPivotZ]} rotation={[coverRotX, 0, 0]} visible={!isCoverOpen}>
         <HoverBox
           id="top-cover"
           args={[W, T, D]}
@@ -194,13 +172,13 @@ export default function Chassis({ isCoverOpen, onSelect, selectedComponent }: Ch
           </mesh>
         ))}
         {/* Model label */}
-        <mesh position={[-1.62, T / 2 + 0.001, D / 2 + 0.62]}>
-          <boxGeometry args={[0.85, 0.002, 0.13]} />
+        <mesh position={[-1.62, T / 2 + 0.001, D / 2 - 0.25]}>
+          <boxGeometry args={[0.70, 0.002, 0.12]} />
           <meshStandardMaterial color="#d0d0c0" metalness={0.1} roughness={0.8} />
         </mesh>
         {/* Serial number sticker */}
-        <mesh position={[1.50, T / 2 + 0.001, D / 2 - 0.80]}>
-          <boxGeometry args={[0.58, 0.002, 0.24]} />
+        <mesh position={[1.50, T / 2 + 0.001, D / 2 - 0.35]}>
+          <boxGeometry args={[0.50, 0.002, 0.20]} />
           <meshStandardMaterial color="#eeeedd" metalness={0.05} roughness={0.92} />
         </mesh>
       </group>
