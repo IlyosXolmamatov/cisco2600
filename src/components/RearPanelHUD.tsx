@@ -1,10 +1,44 @@
 import rearPanelSpecs from '../data/rearPanelSpecs'
+import type { SpecGroup } from '../data/componentSpecs'
 
 interface RearPanelHUDProps {
   selectedId: string | null
   rearCoverOpen: boolean
   onCoverToggle: () => void
   onReset: () => void
+}
+
+const CATEGORY_STYLE: Record<string, { label: string; color: string; bg: string }> = {
+  JISMONIY:    { label: 'JISMONIY',    color: '#60a5fa', bg: 'rgba(96,165,250,0.12)' },
+  TEXNIK:      { label: 'TEXNIK',      color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
+  FOYDALANISH: { label: 'FOYDALANISH', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
+}
+
+function SpecGroupBlock({ group }: { group: SpecGroup }) {
+  const style = CATEGORY_STYLE[group.category] ?? { label: group.category, color: '#9ca3af', bg: 'rgba(156,163,175,0.1)' }
+  return (
+    <div className="mb-2">
+      <div
+        className="text-[9px] font-bold tracking-[0.15em] px-2 py-0.5 rounded mb-1 inline-block"
+        style={{ color: style.color, background: style.bg }}
+      >
+        [{style.label}]
+      </div>
+      <div className="space-y-0.5">
+        {group.fields.map((f) => (
+          <div key={f.key} className="flex justify-between items-start gap-2">
+            <span className="text-gray-500 text-[10px] whitespace-nowrap shrink-0">{f.key}</span>
+            <span
+              className="text-[10px] text-right leading-tight"
+              style={{ color: f.bold ? '#e2e8f0' : '#94a3b8', fontWeight: f.bold ? 600 : 400 }}
+            >
+              {f.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 /**
@@ -67,13 +101,10 @@ export default function RearPanelHUD({
               {selectedSpec.description}
             </p>
 
-            {/* Specs Grid */}
-            <div className="grid grid-cols-1 gap-1 bg-gray-950/50 p-2 rounded border border-cyan-900/30">
-              {Object.entries(selectedSpec.specs).map(([key, value]) => (
-                <div key={key} className="flex gap-2">
-                  <span className="text-cyan-400 font-semibold min-w-[120px]">{key}:</span>
-                  <span className="text-gray-300 break-words">{value}</span>
-                </div>
+            {/* Spec Groups */}
+            <div className="bg-gray-950/50 p-2 rounded border border-cyan-900/30 max-h-48 overflow-y-auto">
+              {selectedSpec.specGroups.map((group, idx) => (
+                <SpecGroupBlock key={idx} group={group} />
               ))}
             </div>
 

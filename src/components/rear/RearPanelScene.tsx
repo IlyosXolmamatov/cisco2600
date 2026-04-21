@@ -81,7 +81,7 @@ const RearPanelScene = forwardRef<RearPanelSceneHandle, RearPanelSceneProps>(
     return (
       <group>
         {/* ── Main chassis rear plate (brushed metal finish) ── */}
-        <mesh position={[0, 0, -0.03]} receiveShadow>
+        <mesh position={[0, 0, -0.031]} receiveShadow>
           <boxGeometry args={[PANEL_W, PANEL_H, PANEL_D]} />
           <meshStandardMaterial
             color="#1f2229"
@@ -91,11 +91,11 @@ const RearPanelScene = forwardRef<RearPanelSceneHandle, RearPanelSceneProps>(
           />
         </mesh>
 
-        {/* ── Perforated mesh texture on rear ── */}
-        {Array.from({ length: 28 }).map((_, i) =>
-          Array.from({ length: 8 }).map((_, j) => (
-            <mesh key={`perf-${i}-${j}`} position={[-2.0 + i * 0.32, -0.15 + j * 0.11, -0.028]}>
-              <cylinderGeometry args={[0.038, 0.038, 0.015, 6]} />
+        {/* ── Perforated mesh texture on rear (contained within bounds) ── */}
+        {Array.from({ length: 26 }).map((_, i) =>
+          Array.from({ length: 6 }).map((_, j) => (
+            <mesh key={`perf-${i}-${j}`} position={[-1.85 + i * 0.32, -0.08 + j * 0.095, -0.029]} castShadow={false}>
+              <cylinderGeometry args={[0.032, 0.032, 0.012, 6]} />
               <meshStandardMaterial color="#0d0f14" metalness={0.3} roughness={0.8} />
             </mesh>
           ))
@@ -158,17 +158,17 @@ const RearPanelScene = forwardRef<RearPanelSceneHandle, RearPanelSceneProps>(
           <boxGeometry args={[PANEL_W - 0.1, 0.04, 0.045]} />
           <meshStandardMaterial color="#1f2229" metalness={0.75} roughness={0.58} />
         </mesh>
-        {/* Bottom intake vents */}
-        {Array.from({ length: 22 }).map((_, i) => (
-          <mesh key={`vent-${i}`} position={[-2.0 + i * 0.20, -PANEL_H / 2 - 0.015, -0.01]}>
+        {/* Bottom intake vents (contained within bounds) */}
+        {Array.from({ length: 18 }).map((_, i) => (
+          <mesh key={`vent-${i}`} position={[-1.8 + i * 0.22, -PANEL_H / 2 - 0.015, -0.01]} castShadow={false}>
             <boxGeometry args={[0.08, 0.012, 0.005]} />
             <meshStandardMaterial color="#0d0f14" metalness={0.3} roughness={0.85} />
           </mesh>
         ))}
 
-        {/* ── Separation seams between groups ── */}
+        {/* ── Separation seams between groups (offset to prevent z-fighting) ── */}
         {[1.315, 0.265, -0.795].map((x, i) => (
-          <mesh key={i} position={[x, 0, 0.028]}>
+          <mesh key={i} position={[x, 0, 0.0281]} castShadow={false}>
             <boxGeometry args={[0.006, PANEL_H * 0.9, 0.004]} />
             <meshStandardMaterial color="#1a1c22" metalness={0.6} roughness={0.7} />
           </mesh>

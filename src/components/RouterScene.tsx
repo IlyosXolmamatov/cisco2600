@@ -17,8 +17,8 @@ interface RouterSceneProps {
 // Resting world-positions for every sub-group
 const REST = {
   mb:   { x: 0,    y: -0.10, z: 0 },
-  ram0: { x: 0.9,  y:  0.08, z: 0.55 },
-  ram1: { x: 1.25, y:  0.08, z: -0.55 },
+  ram0: { x: 0.9,  y: -0.012, z: 0.55 },
+  ram1: { x: 1.25, y: -0.012, z: -0.55 },
   wic0: { x: -1.2, y:  0.00, z: 0.78 },
   wic1: { x: -1.2, y:  0.00, z: -0.05 },
   nm:   { x: 0.3,  y:  0.01, z: -0.80 },
@@ -29,8 +29,8 @@ const REST = {
 // Exploded offsets from rest - Enhanced for professional sequence
 const EXPLODED = {
   mb:   { x: 0,    y: -0.85, z: 0 },     // Down (motherboard drops)
-  ram0: { x: 0.9,  y:  1.85, z: 1.65 }, // Up & Out (spec: Y+8)
-  ram1: { x: 1.25, y:  1.85, z: -1.65 }, // Up & Out (spec: Y+8)
+  ram0: { x: 0.9,  y:  1.65, z: 1.65 }, // Up & Out (spec: Y+8) - adjusted for new base
+  ram1: { x: 1.25, y:  1.65, z: -1.65 }, // Up & Out (spec: Y+8) - adjusted for new base
   wic0: { x: -1.2, y:  0.45, z: 3.10 }, // Out (spec: Z+10)
   wic1: { x: -1.2, y:  0.45, z: 2.30 }, // Out (spec: Z+10)
   nm:   { x: 0.3,  y:  0.45, z: -3.10 }, // Out backward
