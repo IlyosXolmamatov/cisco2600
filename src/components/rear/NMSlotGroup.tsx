@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as THREE from 'three'
 
 /**
@@ -25,30 +25,6 @@ export default function NMSlotGroup({
   const [coverHov, setCoverHov] = useState(false)
   const sel = selectedId === 'nm-blank'
   const glow = sel ? 0.50 : coverHov ? 0.30 : 0
-
-  const HOLE_COLS = 9
-  const HOLE_ROWS = 4
-  const holeRef = useRef<THREE.InstancedMesh>(null)
-  const dummy = new THREE.Object3D()
-
-  // Layout perforations in grid
-  useEffect(() => {
-    if (!holeRef.current) return
-    let idx = 0
-    for (let r = 0; r < HOLE_ROWS; r++) {
-      for (let c = 0; c < HOLE_COLS; c++) {
-        dummy.position.set(
-          -((HOLE_COLS - 1) * 0.1) / 2 + c * 0.1,
-          -((HOLE_ROWS - 1) * 0.075) / 2 + r * 0.075,
-          0.04,
-        )
-        dummy.updateMatrix()
-        holeRef.current.setMatrixAt(idx, dummy.matrix)
-        idx++
-      }
-    }
-    holeRef.current.instanceMatrix.needsUpdate = true
-  }, [])
 
   return (
     <group>
@@ -109,14 +85,7 @@ export default function NMSlotGroup({
           />
         </mesh>
 
-        {/* ── Perforated holes (6mm dia, 100mm × 75mm spacing) ── */}
-        <instancedMesh
-          ref={holeRef}
-          args={[undefined, undefined, HOLE_COLS * HOLE_ROWS]}
-        >
-          <cylinderGeometry args={[0.022, 0.022, 0.065, 6]} />
-          <meshStandardMaterial color="#0d0f14" metalness={0.5} roughness={0.8} />
-        </instancedMesh>
+        {/* ── Perforations removed ── */}
 
         {/* ── Upper-left thumbscrew/mounting post ── */}
         <mesh position={[-0.56, 0.185, 0.032]} castShadow>
