@@ -91,15 +91,7 @@ const RearPanelScene = forwardRef<RearPanelSceneHandle, RearPanelSceneProps>(
           />
         </mesh>
 
-        {/* ── Perforated mesh texture on rear (contained within bounds) ── */}
-        {Array.from({ length: 26 }).map((_, i) =>
-          Array.from({ length: 6 }).map((_, j) => (
-            <mesh key={`perf-${i}-${j}`} position={[-1.85 + i * 0.32, -0.08 + j * 0.095, -0.029]} castShadow={false}>
-              <cylinderGeometry args={[0.032, 0.032, 0.012, 6]} />
-              <meshStandardMaterial color="#0d0f14" metalness={0.3} roughness={0.8} />
-            </mesh>
-          ))
-        )}
+        {/* ── Perforations removed ── */}
 
         {/* ── Rack ears ── */}
         <mesh position={[-PANEL_W / 2 - 0.14, 0, -0.03]} castShadow>

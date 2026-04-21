@@ -204,28 +204,6 @@ export default function Chassis({ isCoverOpen, onSelect, selectedComponent }: Ch
           <meshStandardMaterial color="#eeeedd" metalness={0.05} roughness={0.92} />
         </mesh>
       </group>
-
-      {/* ── Rack mount ears ── */}
-      <mesh position={[-W / 2 - 0.13, 0, 0]} castShadow>
-        <boxGeometry args={[0.22, H * 0.88, 0.44]} />
-        <meshStandardMaterial color={DARK} metalness={0.82} roughness={0.2} />
-      </mesh>
-      <mesh position={[W / 2 + 0.13, 0, 0]} castShadow>
-        <boxGeometry args={[0.22, H * 0.88, 0.44]} />
-        <meshStandardMaterial color={DARK} metalness={0.82} roughness={0.2} />
-      </mesh>
-      {[-0.10, 0.10].map((z, i) => (
-        <mesh key={`ls-${i}`} position={[-W / 2 - 0.24, 0, z]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.024, 0.024, 0.25, 8]} />
-          <meshStandardMaterial color="#1a1a1a" metalness={0.95} roughness={0.1} />
-        </mesh>
-      ))}
-      {[-0.10, 0.10].map((z, i) => (
-        <mesh key={`rs-${i}`} position={[W / 2 + 0.24, 0, z]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.024, 0.024, 0.25, 8]} />
-          <meshStandardMaterial color="#1a1a1a" metalness={0.95} roughness={0.1} />
-        </mesh>
-      ))}
     </group>
   )
 }
