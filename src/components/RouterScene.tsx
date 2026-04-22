@@ -4,7 +4,6 @@ import gsap from "gsap";
 import * as THREE from "three";
 import Chassis from "./Chassis";
 import Motherboard from "./Motherboard";
-import RAM from "./RAM";
 import { WICCard, NMModule, PSU, Fan, HDDBay, IORiser } from "./Modules";
 
 interface RouterSceneProps {

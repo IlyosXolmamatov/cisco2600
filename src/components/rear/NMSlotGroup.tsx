@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import * as THREE from 'three'
+import { useState } from "react";
+import * as THREE from "three";
 
 /**
  * NM Slot Group Component
- * 
+ *
  * Represents the Cisco 2600's Network Module expansion slot
  * on the rear panel with perforated blank cover.
- * 
+ *
  * Scale: 1 unit = 10 cm
  * Position: Far left of rear panel (x ≈ -1.50)
  */
 
 interface NMSlotGroupProps {
-  selectedId: string | null
-  onSelect: (id: string) => void
-  nmCoverRef: React.Ref<THREE.Group>
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  nmCoverRef: React.RefObject<THREE.Group>;
 }
 
 export default function NMSlotGroup({
@@ -22,22 +22,26 @@ export default function NMSlotGroup({
   onSelect,
   nmCoverRef,
 }: NMSlotGroupProps) {
-  const [coverHov, setCoverHov] = useState(false)
-  const sel = selectedId === 'nm-blank'
-  const glow = sel ? 0.50 : coverHov ? 0.30 : 0
+  const [coverHov, setCoverHov] = useState(false);
+  const sel = selectedId === "nm-blank";
+  const glow = sel ? 0.5 : coverHov ? 0.3 : 0;
 
   return (
     <group>
       {/* ── Slot recessed interior (dark cavity) ── */}
       <mesh position={[0, 0, -0.02]} receiveShadow>
-        <boxGeometry args={[1.30, 0.40, 0.02]} />
-        <meshStandardMaterial color="#050609" metalness={0.2} roughness={0.95} />
+        <boxGeometry args={[1.3, 0.4, 0.02]} />
+        <meshStandardMaterial
+          color="#050609"
+          metalness={0.2}
+          roughness={0.95}
+        />
       </mesh>
 
       {/* ── Gold-plated edge connector (Module insertion contacts) ── */}
       {Array.from({ length: 22 }).map((_, i) => (
         <mesh key={`edge-${i}`} position={[-0.5 + i * 0.046, 0, -0.025]}>
-          <boxGeometry args={[0.018, 0.30, 0.008]} />
+          <boxGeometry args={[0.018, 0.3, 0.008]} />
           <meshStandardMaterial
             color="#ccaa30"
             metalness={0.95}
@@ -51,28 +55,36 @@ export default function NMSlotGroup({
       {/* ── Upper guide rail (prevents module tilting) ── */}
       <mesh position={[0, 0.185, -0.015]} receiveShadow>
         <boxGeometry args={[1.22, 0.01, 0.04]} />
-        <meshStandardMaterial color="#111318" metalness={0.65} roughness={0.6} />
+        <meshStandardMaterial
+          color="#111318"
+          metalness={0.65}
+          roughness={0.6}
+        />
       </mesh>
 
       {/* ── Lower guide rail ── */}
       <mesh position={[0, -0.185, -0.015]} receiveShadow>
         <boxGeometry args={[1.22, 0.01, 0.04]} />
-        <meshStandardMaterial color="#111318" metalness={0.65} roughness={0.6} />
+        <meshStandardMaterial
+          color="#111318"
+          metalness={0.65}
+          roughness={0.6}
+        />
       </mesh>
 
       {/* ── Blank cover plate face (main interactive surface) ── */}
-      <group ref={nmCoverRef as any}>
+      <group ref={nmCoverRef}>
         <mesh
           castShadow
           receiveShadow
-          onPointerOver={(e) => {
-            e.stopPropagation()
-            setCoverHov(true)
+          onPointerOver={e => {
+            e.stopPropagation();
+            setCoverHov(true);
           }}
           onPointerOut={() => setCoverHov(false)}
-          onClick={(e) => {
-            e.stopPropagation()
-            onSelect('nm-blank')
+          onClick={e => {
+            e.stopPropagation();
+            onSelect("nm-blank");
           }}
         >
           <boxGeometry args={[1.35, 0.43, 0.052]} />
@@ -87,33 +99,30 @@ export default function NMSlotGroup({
 
         {/* ── Perforations removed ── */}
 
-        {/* ── Upper-left thumbscrew/mounting post ── */}
-        <mesh position={[-0.56, 0.185, 0.032]} castShadow>
-          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
-          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
-        </mesh>
-
-        {/* ── Upper-right thumbscrew ── */}
-        <mesh position={[0.56, 0.185, 0.032]} castShadow>
-          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
-          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
-        </mesh>
-
-        {/* ── Lower-left thumbscrew ── */}
-        <mesh position={[-0.56, -0.185, 0.032]} castShadow>
-          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
-          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
-        </mesh>
-
-        {/* ── Lower-right thumbscrew ── */}
-        <mesh position={[0.56, -0.185, 0.032]} castShadow>
-          <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
-          <meshStandardMaterial color="#aaaaaa" metalness={0.9} roughness={0.2} />
-        </mesh>
+        {/* ── Thumbscrews ── */}
+        {[
+          [-0.56, 0.185, 0.032], // Upper-left
+          [0.56, 0.185, 0.032], // Upper-right
+          [-0.56, -0.185, 0.032], // Lower-left
+          [0.56, -0.185, 0.032], // Lower-right
+        ].map((pos, i) => (
+          <mesh
+            key={`thumbscrew-${i}`}
+            position={pos as [number, number, number]}
+            castShadow
+          >
+            <cylinderGeometry args={[0.025, 0.025, 0.03, 8]} />
+            <meshStandardMaterial
+              color="#aaaaaa"
+              metalness={0.9}
+              roughness={0.2}
+            />
+          </mesh>
+        ))}
 
         {/* ── Slot designation label area ── */}
         <mesh position={[0, -0.23, 0.04]}>
-          <boxGeometry args={[0.50, 0.026, 0.002]} />
+          <boxGeometry args={[0.5, 0.026, 0.002]} />
           <meshStandardMaterial
             color="#556677"
             metalness={0.2}
@@ -134,5 +143,5 @@ export default function NMSlotGroup({
         </mesh>
       </group>
     </group>
-  )
+  );
 }
