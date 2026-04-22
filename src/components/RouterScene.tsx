@@ -72,8 +72,8 @@ const REST = {
   /* Power Supply Unit — Far Left-Rear corner */
   psu: { x: -1.58, y: 0.0, z: -0.82, name: "1-Power Supply Unit (PSU)" },
 
-  /* Cooling Fan — Left-Front, aligned with chassis vent */
-  fan: { x: -1.5, y: -0.02, z: 0.25, name: "2-Cooling Fan" },
+  /* Cooling Fan — Left-Front, lying flat on chassis floor */
+  fan: { x: -1.5, y: -0.14, z: 0.25, name: "2-Cooling Fan" },
 
   /* Hard Drive Bay — Far Right, skeletal frame (optional) */
   hdd: { x: 1.62, y: -0.05, z: 0.65, name: "8-Hard Drive Bay (Optional)" },
@@ -242,6 +242,7 @@ export default function RouterScene({
       <group
         ref={fanRef}
         position={[REST.fan.x, REST.fan.y, REST.fan.z]}
+        rotation={[-Math.PI / 2, 0, 0]}
         name={REST.fan.name}
       >
         <Fan

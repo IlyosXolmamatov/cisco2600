@@ -22,9 +22,9 @@ export function Fan({ position, onSelect, selectedComponent }: FanProps) {
       onPointerOut={() => setHovered(false)}
       onClick={(e) => { e.stopPropagation(); onSelect(id) }}
     >
-      {/* Square outer frame */}
+      {/* Square outer frame — 60mm blower lying flat */}
       <mesh castShadow>
-        <boxGeometry args={[0.65, 0.65, 0.10]} />
+        <boxGeometry args={[0.62, 0.62, 0.08]} />
         <meshStandardMaterial
           color={hovered || isSelected ? '#1e1e1e' : '#111111'}
           metalness={0.4}
@@ -34,16 +34,16 @@ export function Fan({ position, onSelect, selectedComponent }: FanProps) {
         />
       </mesh>
       {/* Inner cylindrical cut (decorative ring) */}
-      <mesh position={[0, 0, 0.05]}>
-        <torusGeometry args={[0.27, 0.02, 8, 32]} />
+      <mesh position={[0, 0, 0.04]}>
+        <torusGeometry args={[0.25, 0.018, 8, 32]} />
         <meshStandardMaterial color="#333344" metalness={0.6} roughness={0.4} />
       </mesh>
       {/* Fan blades — 7 blades */}
       {Array.from({ length: 7 }).map((_, i) => {
         const angle = (i * Math.PI * 2) / 7
         return (
-          <mesh key={`blade-${i}`} position={[Math.sin(angle) * 0.14, Math.cos(angle) * 0.14, 0.04]} rotation={[0, 0, angle + 0.4]}>
-            <boxGeometry args={[0.06, 0.22, 0.008]} />
+          <mesh key={`blade-${i}`} position={[Math.sin(angle) * 0.13, Math.cos(angle) * 0.13, 0.035]} rotation={[0, 0, angle + 0.4]}>
+            <boxGeometry args={[0.055, 0.20, 0.007]} />
             <meshStandardMaterial
               color={hovered || isSelected ? '#1a1a2a' : '#0d0d1a'}
               metalness={0.3}
@@ -53,14 +53,14 @@ export function Fan({ position, onSelect, selectedComponent }: FanProps) {
         )
       })}
       {/* Center hub */}
-      <mesh position={[0, 0, 0.05]}>
-        <cylinderGeometry args={[0.055, 0.055, 0.04, 16]} />
+      <mesh position={[0, 0, 0.04]}>
+        <cylinderGeometry args={[0.050, 0.050, 0.035, 16]} />
         <meshStandardMaterial color="#444455" metalness={0.7} roughness={0.3} />
       </mesh>
       {/* Corner mounting bosses */}
-      {[[-0.27, -0.27], [0.27, -0.27], [-0.27, 0.27], [0.27, 0.27]].map(([x, y], i) => (
-        <mesh key={`boss-${i}`} position={[x, y, 0.05]}>
-          <cylinderGeometry args={[0.025, 0.025, 0.02, 8]} />
+      {[[-0.26, -0.26], [0.26, -0.26], [-0.26, 0.26], [0.26, 0.26]].map(([x, y], i) => (
+        <mesh key={`boss-${i}`} position={[x, y, 0.042]}>
+          <cylinderGeometry args={[0.022, 0.022, 0.018, 8]} />
           <meshStandardMaterial color="#222222" metalness={0.8} roughness={0.2} />
         </mesh>
       ))}
