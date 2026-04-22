@@ -1,20 +1,39 @@
-import { useState, useCallback } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei'
-import FullRouterScene from './components/FullRouterScene'
-import specs from './data/componentSpecs'
-import rearSpecs from './data/rearPanelSpecs'
-import type { SpecGroup } from './data/componentSpecs'
-import './index.css'
+import { useState, useCallback } from "react";
+import { Canvas } from "@react-three/fiber";
+import {
+  OrbitControls,
+  Environment,
+  PerspectiveCamera,
+} from "@react-three/drei";
+import FullRouterScene from "./components/FullRouterScene";
+import specs from "./data/componentSpecs";
+import rearSpecs from "./data/rearPanelSpecs";
+import type { SpecGroup } from "./data/componentSpecs";
+import "./index.css";
 
-const CATEGORY_STYLE: Record<string, { label: string; color: string; bg: string }> = {
-  JISMONIY:    { label: 'JISMONIY',    color: '#60a5fa', bg: 'rgba(96,165,250,0.12)' },
-  TEXNIK:      { label: 'TEXNIK',      color: '#34d399', bg: 'rgba(52,211,153,0.12)' },
-  FOYDALANISH: { label: 'FOYDALANISH', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
-}
+const CATEGORY_STYLE: Record<
+  string,
+  { label: string; color: string; bg: string }
+> = {
+  JISMONIY: {
+    label: "JISMONIY",
+    color: "#60a5fa",
+    bg: "rgba(96,165,250,0.12)",
+  },
+  TEXNIK: { label: "TEXNIK", color: "#34d399", bg: "rgba(52,211,153,0.12)" },
+  FOYDALANISH: {
+    label: "FOYDALANISH",
+    color: "#f59e0b",
+    bg: "rgba(245,158,11,0.12)",
+  },
+};
 
 function SpecGroupBlock({ group }: { group: SpecGroup }) {
-  const style = CATEGORY_STYLE[group.category] ?? { label: group.category, color: '#9ca3af', bg: 'rgba(156,163,175,0.1)' }
+  const style = CATEGORY_STYLE[group.category] ?? {
+    label: group.category,
+    color: "#9ca3af",
+    bg: "rgba(156,163,175,0.1)",
+  };
   return (
     <div className="mb-3">
       <div
@@ -24,12 +43,17 @@ function SpecGroupBlock({ group }: { group: SpecGroup }) {
         [{style.label}]
       </div>
       <div className="space-y-1">
-        {group.fields.map((f) => (
+        {group.fields.map(f => (
           <div key={f.key} className="flex justify-between items-start gap-3">
-            <span className="text-gray-500 text-[11px] whitespace-nowrap shrink-0">{f.key}</span>
+            <span className="text-gray-500 text-[11px] whitespace-nowrap shrink-0">
+              {f.key}
+            </span>
             <span
               className="text-[11px] text-right leading-tight"
-              style={{ color: f.bold ? '#e2e8f0' : '#94a3b8', fontWeight: f.bold ? 600 : 400 }}
+              style={{
+                color: f.bold ? "#e2e8f0" : "#94a3b8",
+                fontWeight: f.bold ? 600 : 400,
+              }}
             >
               {f.value}
             </span>
@@ -37,63 +61,61 @@ function SpecGroupBlock({ group }: { group: SpecGroup }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export default function App() {
-  const [isCoverOpen, setIsCoverOpen] = useState(false)
-  const [isExploded, setIsExploded]   = useState(false)
-  const [routerSel, setRouterSel]     = useState<string | null>(null)
+  const [isCoverOpen, setIsCoverOpen] = useState(false);
+  const [isExploded, setIsExploded] = useState(false);
+  const [routerSel, setRouterSel] = useState<string | null>(null);
 
-  const [rearCoverOpen, setRearCoverOpen] = useState(false)
-  const [rearSel, setRearSel]             = useState<string | null>(null)
-  const [showSpecs, setShowSpecs]         = useState(true)
+  const [rearCoverOpen, setRearCoverOpen] = useState(false);
+  const [rearSel, setRearSel] = useState<string | null>(null);
+  const [showSpecs, setShowSpecs] = useState(true);
 
   const handleRouterSelect = useCallback((id: string) => {
-    setRouterSel(prev => prev === id ? null : id)
-  }, [])
+    setRouterSel(prev => (prev === id ? null : id));
+  }, []);
 
   const handleRearSelect = useCallback((id: string) => {
-    setRearSel(prev => prev === id ? null : id)
-    setShowSpecs(true)
-  }, [])
+    setRearSel(prev => (prev === id ? null : id));
+    setShowSpecs(true);
+  }, []);
 
   const handleRouterReset = () => {
-    setIsCoverOpen(false)
-    setIsExploded(false)
-    setRouterSel(null)
-  }
+    setIsCoverOpen(false);
+    setIsExploded(false);
+    setRouterSel(null);
+  };
 
   const handleRearReset = () => {
-    setRearCoverOpen(false)
-    setRearSel(null)
-  }
+    setRearCoverOpen(false);
+    setRearSel(null);
+  };
 
-  const handleRearCoverToggle = () => {
-    setRearCoverOpen(v => !v)
-    // Qopqoq yopilganda modalni yopib qo'yish
-    if (rearCoverOpen) {
-      setRearSel(null)
-    }
-  }
+  const routerSelected = routerSel ? specs[routerSel] : null;
+  const rearSelected = rearSel ? rearSpecs[rearSel] : null;
 
-  const routerSelected = routerSel ? specs[routerSel] : null
-  const rearSelected   = rearSel   ? rearSpecs[rearSel] : null
-
-  const glassPanel = "bg-gray-950/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl"
+  const glassPanel =
+    "bg-gray-950/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl";
 
   return (
     <div className="w-screen h-screen bg-gray-950 relative overflow-hidden">
-
       {/* ══════ 3D Sahna ══════ */}
       <Canvas shadows className="w-full h-full">
         <PerspectiveCamera makeDefault position={[7, 2, 3]} fov={42} />
         <ambientLight intensity={0.5} />
-        <directionalLight position={[4, 8, 4]} intensity={1.3} castShadow
+        <directionalLight
+          position={[4, 8, 4]}
+          intensity={1.3}
+          castShadow
           shadow-mapSize={[2048, 2048]}
-          shadow-camera-near={0.1} shadow-camera-far={50}
-          shadow-camera-left={-10} shadow-camera-right={10}
-          shadow-camera-top={10}  shadow-camera-bottom={-10}
+          shadow-camera-near={0.1}
+          shadow-camera-far={50}
+          shadow-camera-left={-10}
+          shadow-camera-right={10}
+          shadow-camera-top={10}
+          shadow-camera-bottom={-10}
         />
         <pointLight position={[-5, 2, 2]} intensity={0.6} color="#4488ff" />
         <pointLight position={[5, -1, -3]} intensity={0.5} color="#ffaa44" />
@@ -108,7 +130,8 @@ export default function App() {
           onSelectRear={handleRearSelect}
         />
         <OrbitControls
-          enableDamping dampingFactor={0.05}
+          enableDamping
+          dampingFactor={0.05}
           minDistance={3}
           maxDistance={25}
           maxPolarAngle={Math.PI * 0.85}
@@ -117,7 +140,6 @@ export default function App() {
 
       {/* ══════ Ko'rinish rejimi paneli ══════ */}
       <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-3 pointer-events-none">
-
         {/* Chap: brend + tablar */}
         <div className="pointer-events-auto flex items-center gap-3">
           <div className={`${glassPanel} px-4 py-2.5`}>
@@ -131,19 +153,32 @@ export default function App() {
               44.5sm × 4.3sm × 30.1sm · 1U Stend
             </div>
           </div>
-
-
         </div>
 
         {/* O'ng: boshqaruv tugmalari */}
         <div className="pointer-events-auto flex gap-2">
-          <NavBtn active={isCoverOpen} activeColor="blue" onClick={() => setIsCoverOpen(v => !v)}>
-            {isCoverOpen ? 'Qopqoqni Yop' : 'Qopqoqni Och'}
+          <NavBtn
+            active={isCoverOpen}
+            activeColor="blue"
+            onClick={() => setIsCoverOpen(v => !v)}
+          >
+            {isCoverOpen ? "Qopqoqni Yop" : "Qopqoqni Och"}
           </NavBtn>
-          <NavBtn active={isExploded} activeColor="purple" onClick={() => setIsExploded(v => !v)}>
-            {isExploded ? "Yig'ish" : 'Parchalash'}
+          <NavBtn
+            active={isExploded}
+            activeColor="purple"
+            onClick={() => setIsExploded(v => !v)}
+          >
+            {isExploded ? "Yig'ish" : "Parchalash"}
           </NavBtn>
-          <NavBtn active={false} activeColor="red" onClick={() => { handleRouterReset(); handleRearReset() }}>
+          <NavBtn
+            active={false}
+            activeColor="red"
+            onClick={() => {
+              handleRouterReset();
+              handleRearReset();
+            }}
+          >
             Qayta Tiklash
           </NavBtn>
         </div>
@@ -151,34 +186,39 @@ export default function App() {
 
       {/* ══════ Holat ko'rsatkichlari ══════ */}
       <div className="absolute bottom-4 left-6 flex gap-2 pointer-events-none">
-        {isCoverOpen && (
-          <StatusPill color="#60a5fa">Qopqoq Ochiq</StatusPill>
-        )}
+        {isCoverOpen && <StatusPill color="#60a5fa">Qopqoq Ochiq</StatusPill>}
         {isExploded && (
           <StatusPill color="#a78bfa">Parchalangan Ko'rinish</StatusPill>
         )}
-        {rearCoverOpen && (
-          <StatusPill color="#6366f1">Orqa Ochiq</StatusPill>
-        )}
+        {rearCoverOpen && <StatusPill color="#6366f1">Orqa Ochiq</StatusPill>}
       </div>
 
       {/* ══════ Xususiyatlar paneli — Orqa panel ══════ */}
       {rearSelected && showSpecs && (
-        <div className={`absolute top-20 right-6 w-80 transition-all duration-300 opacity-100 translate-x-0`}>
+        <div
+          className={`absolute top-20 right-6 w-80 transition-all duration-300 opacity-100 translate-x-0`}
+        >
           <div className={`${glassPanel} p-4`}>
             <div className="flex items-center gap-2 mb-2">
               <div
                 className="w-2.5 h-2.5 rounded-full shrink-0 shadow-lg"
-                style={{ backgroundColor: rearSelected.indicatorColor, boxShadow: `0 0 8px ${rearSelected.indicatorColor}88` }}
+                style={{
+                  backgroundColor: rearSelected.indicatorColor,
+                  boxShadow: `0 0 8px ${rearSelected.indicatorColor}88`,
+                }}
               />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em]"
-                style={{ color: rearSelected.indicatorColor }}>
+              <span
+                className="text-[10px] font-mono font-bold uppercase tracking-[0.2em]"
+                style={{ color: rearSelected.indicatorColor }}
+              >
                 {rearSelected.category}
               </span>
               <button
                 onClick={() => setRearSel(null)}
                 className="ml-auto text-gray-600 hover:text-white text-base transition-colors w-5 h-5 flex items-center justify-center rounded hover:bg-white/10"
-              >×</button>
+              >
+                ×
+              </button>
             </div>
 
             <h2 className="text-white font-semibold text-sm leading-tight mb-1.5">
@@ -188,7 +228,7 @@ export default function App() {
               {rearSelected.description}
             </p>
             <div>
-              {rearSelected.specGroups.map((g) => (
+              {rearSelected.specGroups.map(g => (
                 <SpecGroupBlock key={g.category} group={g} />
               ))}
             </div>
@@ -198,9 +238,13 @@ export default function App() {
 
       {/* ══════ Xususiyatlar paneli — Router ══════ */}
       {routerSelected && (
-        <div className={`absolute top-20 right-6 w-80 transition-all duration-300 ${
-          routerSelected ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
-        }`}>
+        <div
+          className={`absolute top-20 right-6 w-80 transition-all duration-300 ${
+            routerSelected
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 translate-x-8 pointer-events-none"
+          }`}
+        >
           <div className={`${glassPanel} p-4`}>
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-cyan-400 shadow-lg shadow-cyan-400/40" />
@@ -210,7 +254,9 @@ export default function App() {
               <button
                 onClick={() => setRouterSel(null)}
                 className="ml-auto text-gray-600 hover:text-white text-base transition-colors w-5 h-5 flex items-center justify-center rounded hover:bg-white/10"
-              >×</button>
+              >
+                ×
+              </button>
             </div>
 
             <h2 className="text-white font-semibold text-sm leading-tight mb-1.5">
@@ -220,7 +266,7 @@ export default function App() {
               {routerSelected.description}
             </p>
             <div>
-              {routerSelected.specGroups.map((g) => (
+              {routerSelected.specGroups.map(g => (
                 <SpecGroupBlock key={g.category} group={g} />
               ))}
             </div>
@@ -228,17 +274,20 @@ export default function App() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 /* ── Reusable nav button ── */
 const ACTIVE_COLORS: Record<string, string> = {
-  blue:    'bg-blue-600/80 border-blue-400/60 text-white shadow-lg shadow-blue-500/20',
-  indigo:  'bg-indigo-600/80 border-indigo-400/60 text-white shadow-lg shadow-indigo-500/20',
-  purple:  'bg-purple-600/80 border-purple-400/60 text-white shadow-lg shadow-purple-500/20',
-  emerald: 'bg-emerald-700/80 border-emerald-500/60 text-white shadow-lg shadow-emerald-500/20',
-  red:     'bg-red-700/80 border-red-500/60 text-white shadow-lg shadow-red-500/20',
-}
+  blue: "bg-blue-600/80 border-blue-400/60 text-white shadow-lg shadow-blue-500/20",
+  indigo:
+    "bg-indigo-600/80 border-indigo-400/60 text-white shadow-lg shadow-indigo-500/20",
+  purple:
+    "bg-purple-600/80 border-purple-400/60 text-white shadow-lg shadow-purple-500/20",
+  emerald:
+    "bg-emerald-700/80 border-emerald-500/60 text-white shadow-lg shadow-emerald-500/20",
+  red: "bg-red-700/80 border-red-500/60 text-white shadow-lg shadow-red-500/20",
+};
 
 function NavBtn({
   children,
@@ -246,10 +295,10 @@ function NavBtn({
   activeColor,
   onClick,
 }: {
-  children: React.ReactNode
-  active: boolean
-  activeColor: string
-  onClick: () => void
+  children: React.ReactNode;
+  active: boolean;
+  activeColor: string;
+  onClick: () => void;
 }) {
   return (
     <button
@@ -257,15 +306,21 @@ function NavBtn({
       className={`px-4 py-2 rounded-lg font-mono text-xs font-semibold tracking-wider uppercase transition-all duration-200 border ${
         active
           ? (ACTIVE_COLORS[activeColor] ?? ACTIVE_COLORS.blue)
-          : 'bg-gray-950/60 backdrop-blur-xl border-white/10 text-gray-400 hover:text-white hover:border-white/25 hover:bg-white/5'
+          : "bg-gray-950/60 backdrop-blur-xl border-white/10 text-gray-400 hover:text-white hover:border-white/25 hover:bg-white/5"
       }`}
     >
       {children}
     </button>
-  )
+  );
 }
 
-function StatusPill({ children, color }: { children: React.ReactNode; color: string }) {
+function StatusPill({
+  children,
+  color,
+}: {
+  children: React.ReactNode;
+  color: string;
+}) {
   return (
     <div
       className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded-full border"
@@ -278,5 +333,5 @@ function StatusPill({ children, color }: { children: React.ReactNode; color: str
     >
       ● {children}
     </div>
-  )
+  );
 }
