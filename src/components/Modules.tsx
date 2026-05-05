@@ -795,18 +795,15 @@ export function DRAM({
   };
 
   return (
-    <group
-      position={position}
-      name="dram-module"
-    >
+    <group position={position} name="dram-module">
       {/* Main PCB board — dark green FR4 */}
-      <mesh 
-        castShadow 
+      <mesh
+        castShadow
         name="dram-pcb"
         onClick={handleClick}
-        onPointerMove={(e) => {
+        onPointerMove={e => {
           // Ensure raycast only hits this DRAM mesh
-          if (e.object.name === 'dram-pcb') {
+          if (e.object.name === "dram-pcb") {
             console.log(`[DRAM-${slotIndex}] Pointer move detected`);
           }
         }}
