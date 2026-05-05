@@ -152,7 +152,7 @@ const specs: Record<string, ComponentSpec> = {
       },
     ],
   },
-  'ram-0': {
+  'dram-0': {
     label: 'DRAM DIMM Uyasi 0',
     description: "Asosiy DRAM uyasi. Cisco 2600 Cisco IOS tomonidan foydalanadigan asosiy tizim xotirasi uchun maxsus DRAM DIMM lardan foydalanadi.",
     specGroups: [
@@ -182,7 +182,7 @@ const specs: Record<string, ComponentSpec> = {
       },
     ],
   },
-  'ram-1': {
+  'dram-1': {
     label: 'DRAM DIMM Uyasi 1',
     description: "Ikkilamchi DRAM kengaytirish uyasi. Ikkinchi DIMM qo'shish kattaroq IOS xususiyatlari to'plamini ishlatish uchun tizim xotirasini ikki baravar oshiradi.",
     specGroups: [

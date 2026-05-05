@@ -14,7 +14,7 @@ import * as THREE from "three";
 interface NMSlotGroupProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
-  nmCoverRef: React.RefObject<THREE.Group>;
+  nmCoverRef: React.RefObject<THREE.Group | null>;
 }
 
 export default function NMSlotGroup({

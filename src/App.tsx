@@ -6,6 +6,7 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import FullRouterScene from "./components/FullRouterScene";
+import IntroPages from "./components/IntroPages";
 import specs from "./data/componentSpecs";
 import rearSpecs from "./data/rearPanelSpecs";
 import type { SpecGroup } from "./data/componentSpecs";
@@ -65,6 +66,7 @@ function SpecGroupBlock({ group }: { group: SpecGroup }) {
 }
 
 export default function App() {
+  const [showIntro, setShowIntro] = useState(true);
   const [isCoverOpen, setIsCoverOpen] = useState(false);
   const [isExploded, setIsExploded] = useState(false);
   const [routerSel, setRouterSel] = useState<string | null>(null);
@@ -98,6 +100,11 @@ export default function App() {
 
   const glassPanel =
     "bg-gray-950/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl";
+
+  // Show intro pages first
+  if (showIntro) {
+    return <IntroPages onComplete={() => setShowIntro(false)} />;
+  }
 
   return (
     <div className="w-screen h-screen bg-gray-950 relative overflow-hidden">
@@ -140,8 +147,14 @@ export default function App() {
 
       {/* ══════ Ko'rinish rejimi paneli ══════ */}
       <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-3 pointer-events-none">
-        {/* Chap: brend + tablar */}
+        {/* Chap: orqaga tugmasi + brend */}
         <div className="pointer-events-auto flex items-center gap-3">
+          <button
+            onClick={() => setShowIntro(true)}
+            className="px-4 py-2 rounded-lg font-mono text-xs font-semibold tracking-wider uppercase transition-all duration-200 border bg-gray-950/60 backdrop-blur-xl border-white/10 text-gray-400 hover:text-white hover:border-white/25 hover:bg-white/5"
+          >
+            ← Orqaga
+          </button>
           <div className={`${glassPanel} px-4 py-2.5`}>
             <div className="flex items-center gap-2 mb-0.5">
               <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-lg shadow-green-400/50" />
@@ -186,6 +199,7 @@ export default function App() {
 
       {/* ══════ Holat ko'rsatkichlari ══════ */}
       <div className="absolute bottom-4 left-6 flex gap-2 pointer-events-none">
+        <StatusPill color="#10b981">📦 Jami: 11 Komponent</StatusPill>
         {isCoverOpen && <StatusPill color="#60a5fa">Qopqoq Ochiq</StatusPill>}
         {isExploded && (
           <StatusPill color="#a78bfa">Parchalangan Ko'rinish</StatusPill>

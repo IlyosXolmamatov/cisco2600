@@ -4,7 +4,7 @@ import gsap from "gsap";
 import * as THREE from "three";
 import Chassis from "./Chassis";
 import Motherboard from "./Motherboard";
-import { WICCard, NMModule, PSU, Fan, HDDBay, IORiser } from "./Modules";
+import { WICCard, NMModule, PSU, Fan, HDDBay, IORiser, DRAM } from "./Modules";
 
 interface RouterSceneProps {
   isCoverOpen: boolean;
@@ -78,13 +78,17 @@ const REST = {
   /* Hard Drive Bay — Far Right, skeletal frame (optional) */
   hdd: { x: 1.62, y: -0.05, z: 0.65, name: "8-Hard Drive Bay (Optional)" },
 
-  /* Internal I/O Riser — Front-Right, daughterboard */
+  /* I/O Riser — Front-Right connector bridge */
   ior: { x: 0.35, y: 0.08, z: 0.92, name: "9-Internal I/O Connector/Riser" },
+
+  /* DRAM Memory Modules — Right-Front area, vertical slots */
+  dram0: { x: 1.8, y: -0.1, z: 0.45, name: "5a-DRAM DIMM Slot 0 (8-16MB)" },
+  dram1: { x: 1.8, y: -0.1, z: 0.65, name: "5b-DRAM DIMM Slot 1 (8-16MB)" },
 };
 
 const EXPLODED = {
   /* Exploded offsets for disassembly view (Y-axis primary, staggered) */
-  mb: { x: 0.0, y: -0.9, z: 0.0 },
+  mb: { x: 0.0, y: 1.8, z: 0.0 }, // Motherboard lifts UP significantly
   wic0: { x: -1.2, y: 0.45, z: 3.1 },
   wic1: { x: -1.2, y: 0.45, z: 2.35 },
   nm0: { x: -0.32, y: 0.5, z: -3.25 },
@@ -93,6 +97,8 @@ const EXPLODED = {
   fan: { x: -2.5, y: 0.5, z: 0.75 }, // Left-front, forward + outward
   hdd: { x: 2.5, y: 0.55, z: 2.35 }, // Right, outward + forward
   ior: { x: 0.35, y: 1.5, z: 1.6 }, // Front-right, upward + forward
+  dram0: { x: 2.8, y: 2.3, z: 0.45 }, // Right-front, lifts with motherboard
+  dram1: { x: 2.8, y: 2.3, z: 0.65 }, // Right-front, lifts with motherboard
 };
 
 type ComponentKey = keyof typeof REST;
@@ -112,6 +118,8 @@ export default function RouterScene({
   const fanRef = useRef<THREE.Group>(null);
   const hddRef = useRef<THREE.Group>(null);
   const iorRef = useRef<THREE.Group>(null);
+  const dram0Ref = useRef<THREE.Group>(null);
+  const dram1Ref = useRef<THREE.Group>(null);
   const wiringRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
@@ -128,6 +136,8 @@ export default function RouterScene({
       { ref: wic1Ref, key: "wic1" },
       { ref: hddRef, key: "hdd" },
       { ref: iorRef, key: "ior" },
+      { ref: dram0Ref, key: "dram0" },
+      { ref: dram1Ref, key: "dram1" },
     ];
 
     const tl = gsap.timeline();
@@ -273,6 +283,32 @@ export default function RouterScene({
       >
         <IORiser
           position={[0, 0, 0]}
+          onSelect={onSelect}
+          selectedComponent={selectedComponent}
+        />
+      </group>
+
+      {/* ═══════════ DRAM MODULES — Component #5 (MEMORY DIMM SLOTS) ═══════════ */}
+      <group
+        ref={dram0Ref}
+        position={[REST.dram0.x, REST.dram0.y, REST.dram0.z]}
+        name={REST.dram0.name}
+      >
+        <DRAM
+          position={[0, 0, 0]}
+          slotIndex={0}
+          onSelect={onSelect}
+          selectedComponent={selectedComponent}
+        />
+      </group>
+      <group
+        ref={dram1Ref}
+        position={[REST.dram1.x, REST.dram1.y, REST.dram1.z]}
+        name={REST.dram1.name}
+      >
+        <DRAM
+          position={[0, 0, 0]}
+          slotIndex={1}
           onSelect={onSelect}
           selectedComponent={selectedComponent}
         />
