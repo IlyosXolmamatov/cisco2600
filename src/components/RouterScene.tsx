@@ -289,30 +289,7 @@ export default function RouterScene({
       </group>
 
       {/* ═══════════ DRAM MODULES — Component #5 (MEMORY DIMM SLOTS) ═══════════ */}
-      <group
-        ref={dram0Ref}
-        position={[REST.dram0.x, REST.dram0.y, REST.dram0.z]}
-        name={REST.dram0.name}
-      >
-        <DRAM
-          position={[0, 0, 0]}
-          slotIndex={0}
-          onSelect={onSelect}
-          selectedComponent={selectedComponent}
-        />
-      </group>
-      <group
-        ref={dram1Ref}
-        position={[REST.dram1.x, REST.dram1.y, REST.dram1.z]}
-        name={REST.dram1.name}
-      >
-        <DRAM
-          position={[0, 0, 0]}
-          slotIndex={1}
-          onSelect={onSelect}
-          selectedComponent={selectedComponent}
-        />
-      </group>
+      {/* MOVED TO END FOR RAYCAST PRIORITY */}
 
       {/* ═══════════ PROCEDURAL WIRING — PSU to Motherboard ═══════════ */}
       <group ref={wiringRef} name="internal-wiring">
@@ -355,6 +332,32 @@ export default function RouterScene({
         blur={2.8}
         far={1.2}
       />
+
+      {/* ═══════════ DRAM MODULES (RENDERED LAST FOR RAYCAST PRIORITY) ═══════════ */}
+      <group
+        ref={dram0Ref}
+        position={[REST.dram0.x, REST.dram0.y, REST.dram0.z]}
+        name={REST.dram0.name}
+      >
+        <DRAM
+          position={[0, 0, 0]}
+          slotIndex={0}
+          onSelect={onSelect}
+          selectedComponent={selectedComponent}
+        />
+      </group>
+      <group
+        ref={dram1Ref}
+        position={[REST.dram1.x, REST.dram1.y, REST.dram1.z]}
+        name={REST.dram1.name}
+      >
+        <DRAM
+          position={[0, 0, 0]}
+          slotIndex={1}
+          onSelect={onSelect}
+          selectedComponent={selectedComponent}
+        />
+      </group>
     </group>
   );
 }

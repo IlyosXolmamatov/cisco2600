@@ -788,23 +788,39 @@ export function DRAM({
   const id = `dram-${slotIndex}`;
   const isSelected = selectedComponent === id;
 
+  const handleClick = (e: any) => {
+    console.log(`[DRAM-${slotIndex}] Click detected! ID: ${id}`);
+    e.stopPropagation();
+    onSelect(id);
+  };
+
   return (
     <group
       position={position}
       name="dram-module"
-      onPointerOver={e => {
-        e.stopPropagation();
-        setHovered(true);
-      }}
-      onPointerOut={() => setHovered(false)}
-      onClick={e => {
-        e.stopPropagation();
-        onSelect(id);
-      }}
     >
       {/* Main PCB board — dark green FR4 */}
-      <mesh castShadow name="dram-pcb">
-        <boxGeometry args={[1.0, 0.12, 0.5]} />
+      <mesh 
+        castShadow 
+        name="dram-pcb"
+        onClick={handleClick}
+        onPointerMove={(e) => {
+          // Ensure raycast only hits this DRAM mesh
+          if (e.object.name === 'dram-pcb') {
+            console.log(`[DRAM-${slotIndex}] Pointer move detected`);
+          }
+        }}
+        onPointerOver={e => {
+          console.log(`[DRAM-${slotIndex}] Mesh hover started`);
+          e.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={() => {
+          console.log(`[DRAM-${slotIndex}] Mesh hover ended`);
+          setHovered(false);
+        }}
+      >
+        <boxGeometry args={[1.5, 0.2, 0.8]} />
         <meshStandardMaterial
           color={hovered || isSelected ? "#1a4030" : "#004400"}
           metalness={0.08}
