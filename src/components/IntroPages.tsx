@@ -46,7 +46,7 @@ export default function IntroPages({ onComplete, onBack, onMenuStart, startAtMen
           <img
             src={titul}
             alt="Cisco 2600 Seriyasi"
-            width={1050}
+            width={800}
             className="mb-8 drop-shadow-2xl"
           />
           <button
