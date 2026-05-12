@@ -1,5 +1,5 @@
 import { useState } from "react";
-import titul from "../assets/Titul.png";
+import titul from "../assets/Titul2.png";
 
 interface IntroPagesProps {
   onComplete: () => void;
@@ -46,7 +46,7 @@ export default function IntroPages({ onComplete, onBack, onMenuStart, startAtMen
           <img
             src={titul}
             alt="Cisco 2600 Seriyasi"
-            width={500}
+            width={1050}
             className="mb-8 drop-shadow-2xl"
           />
           <button
@@ -63,7 +63,7 @@ export default function IntroPages({ onComplete, onBack, onMenuStart, startAtMen
 
       {/* MENU QISMI (2-QI QISM) */}
       {currentPage === 'menu' && (
-        <div className="relative z-10 w-full h-full flex">
+        <div className="relative z-10 w-full h-full flex flex-col md:flex-row">
           {/* Menu Panel - Doim Ochiq */}
           <div className="hidden md:flex w-80 bg-linear-to-b from-gray-950/95 to-blue-950/95 backdrop-blur-xl border-r border-white/10 shadow-2xl flex-col">
             <div className="pt-8 px-6 space-y-3 flex-1 overflow-y-auto">
@@ -84,112 +84,115 @@ export default function IntroPages({ onComplete, onBack, onMenuStart, startAtMen
                 </button>
               ))}
             </div>
+            {/* Sidebar Bottom Back Button */}
+            <div className="px-6 py-4 border-t border-white/10">
+              <button
+                onClick={() => {
+                  setCurrentPage('title');
+                  setSelectedSection(null);
+                }}
+                className="w-full px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300"
+              >
+                ← Orqaga
+              </button>
+            </div>
           </div>
 
-          {/* Mobile Menu - Accordion shakli */}
-          <div className="md:hidden w-full flex flex-col">
-            <div className="bg-linear-to-b from-gray-950/95 to-blue-950/95 backdrop-blur-xl border-b border-white/10 p-4 overflow-y-auto max-h-40">
-              <div className="space-y-2 flex flex-wrap gap-2">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleSelectSection(item.id)}
-                    className={`px-3 py-2 rounded-lg transition-all duration-300 border text-sm ${
-                      selectedSection === item.id
-                        ? 'bg-blue-500/30 border-blue-400/60 text-white'
-                        : 'border-white/10 text-gray-300 hover:bg-white/5 hover:border-white/20'
-                    }`}
-                  >
-                    <span>{item.icon} {item.title}</span>
-                  </button>
-                ))}
-              </div>
+          {/* Mobile Menu - Top Bar */}
+          <div className="md:hidden w-full bg-linear-to-b from-gray-950/95 to-blue-950/95 backdrop-blur-xl border-b border-white/10 p-3">
+            <div className="flex flex-wrap gap-2 justify-start">
+              {menuItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleSelectSection(item.id)}
+                  className={`px-3 py-2 rounded-lg transition-all duration-300 border text-xs md:text-sm whitespace-nowrap ${
+                    selectedSection === item.id
+                      ? 'bg-blue-500/30 border-blue-400/60 text-white'
+                      : 'border-white/10 text-gray-300 hover:bg-white/5 hover:border-white/20'
+                  }`}
+                >
+                  <span className="hidden sm:inline">{item.icon} </span>
+                  <span className="text-xs">{item.title.substring(0, 8)}</span>
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 flex items-center justify-center px-4 md:px-6 py-6 overflow-y-auto">
+          <div className="flex-1 flex items-center justify-center px-4 md:px-6 py-6 overflow-y-auto w-full">
             {selectedSection === 'nazariy' && (
-              <div className="max-w-2xl animate-fadeIn">
-                <div className="flex items-center gap-4 mb-6">
-                  <button
-                    onClick={() => {
-                      setSelectedSection(null);
-                      if (startAtMenu) onBack?.();
-                    }}
-                    className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300"
-                  >
-                    ← Orqaga
-                  </button>
-                  <h2 className="text-4xl font-bold text-white">📚 Nazariy Ma'lumot</h2>
-                </div>
-                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+              <div className="max-w-2xl w-full animate-fadeIn flex flex-col">
+                <h2 className="text-4xl font-bold text-white mb-6">📚 Nazariy Ma'lumot</h2>
+                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6 flex-1 mb-6">
                   <p>Bu bo'limda Cisco 2600 Seriyasining nazariy asoslari va tuzilishi haqida ma'lumot joylashadi.</p>
                   <p className="text-sm text-gray-500">Ma'lumot tez orada qo'shiladi...</p>
                 </div>
+                <button
+                  onClick={() => {
+                    setSelectedSection(null);
+                    if (startAtMenu) onBack?.();
+                  }}
+                  className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300 self-start"
+                >
+                  ← Orqaga
+                </button>
               </div>
             )}
 
             {selectedSection === 'video' && (
-              <div className="max-w-2xl animate-fadeIn">
-                <div className="flex items-center gap-4 mb-6">
-                  <button
-                    onClick={() => {
-                      setSelectedSection(null);
-                      if (startAtMenu) onBack?.();
-                    }}
-                    className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300"
-                  >
-                    ← Orqaga
-                  </button>
-                  <h2 className="text-4xl font-bold text-white">🎥 Video Darslik</h2>
-                </div>
-                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+              <div className="max-w-2xl w-full animate-fadeIn flex flex-col">
+                <h2 className="text-4xl font-bold text-white mb-6">🎥 Video Darslik</h2>
+                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6 flex-1 mb-6">
                   <p>Bu bo'limda Cisco 2600 haqida video darsliklar joylashadi.</p>
                   <p className="text-sm text-gray-500">Video tez orada qo'shiladi...</p>
                 </div>
+                <button
+                  onClick={() => {
+                    setSelectedSection(null);
+                    if (startAtMenu) onBack?.();
+                  }}
+                  className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300 self-start"
+                >
+                  ← Orqaga
+                </button>
               </div>
             )}
 
             {selectedSection === 'funksional' && (
-              <div className="max-w-2xl animate-fadeIn">
-                <div className="flex items-center gap-4 mb-6">
-                  <button
-                    onClick={() => {
-                      setSelectedSection(null);
-                      if (startAtMenu) onBack?.();
-                    }}
-                    className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300"
-                  >
-                    ← Orqaga
-                  </button>
-                  <h2 className="text-4xl font-bold text-white">⚙️ Funksional Sxemalari</h2>
-                </div>
-                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+              <div className="max-w-2xl w-full animate-fadeIn flex flex-col">
+                <h2 className="text-4xl font-bold text-white mb-6">⚙️ Funksional Sxemalari</h2>
+                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6 flex-1 mb-6">
                   <p>Bu bo'limda Cisco 2600 ning funksional sxemalari joylashadi.</p>
                   <p className="text-sm text-gray-500">Sxemalar tez orada qo'shiladi...</p>
                 </div>
+                <button
+                  onClick={() => {
+                    setSelectedSection(null);
+                    if (startAtMenu) onBack?.();
+                  }}
+                  className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300 self-start"
+                >
+                  ← Orqaga
+                </button>
               </div>
             )}
 
             {selectedSection === 'ishlash' && (
-              <div className="max-w-2xl animate-fadeIn">
-                <div className="flex items-center gap-4 mb-6">
-                  <button
-                    onClick={() => {
-                      setSelectedSection(null);
-                      if (startAtMenu) onBack?.();
-                    }}
-                    className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300"
-                  >
-                    ← Orqaga
-                  </button>
-                  <h2 className="text-4xl font-bold text-white">💡 Ishlash Prinsipi</h2>
-                </div>
-                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+              <div className="max-w-2xl w-full animate-fadeIn flex flex-col">
+                <h2 className="text-4xl font-bold text-white mb-6">💡 Ishlash Prinsipi</h2>
+                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6 flex-1 mb-6">
                   <p>Bu bo'limda Cisco 2600 ning ishlash prinsipi va mexanizmi tushuntiriladi.</p>
                   <p className="text-sm text-gray-500">Ma'lumot tez orada qo'shiladi...</p>
                 </div>
+                <button
+                  onClick={() => {
+                    setSelectedSection(null);
+                    if (startAtMenu) onBack?.();
+                  }}
+                  className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300 self-start"
+                >
+                  ← Orqaga
+                </button>
               </div>
             )}
 
