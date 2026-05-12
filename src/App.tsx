@@ -67,6 +67,7 @@ function SpecGroupBlock({ group }: { group: SpecGroup }) {
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
+  const [showIntroMenu, setShowIntroMenu] = useState(false);
   const [isCoverOpen, setIsCoverOpen] = useState(false);
   const [isExploded, setIsExploded] = useState(false);
   const [routerSel, setRouterSel] = useState<string | null>(null);
@@ -102,8 +103,24 @@ export default function App() {
     "bg-gray-950/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl";
 
   // Show intro pages first
-  if (showIntro) {
-    return <IntroPages onComplete={() => setShowIntro(false)} />;
+  if (showIntro || showIntroMenu) {
+    return (
+      <IntroPages
+        startAtMenu={showIntroMenu}
+        onMenuStart={() => {
+          setShowIntro(false);
+          setShowIntroMenu(true);
+        }}
+        onComplete={() => {
+          setShowIntro(false);
+          setShowIntroMenu(false);
+        }}
+        onBack={() => {
+          setShowIntro(false);
+          setShowIntroMenu(true);
+        }}
+      />
+    );
   }
 
   return (
@@ -150,7 +167,10 @@ export default function App() {
         {/* Chap: orqaga tugmasi + brend */}
         <div className="pointer-events-auto flex items-center gap-3">
           <button
-            onClick={() => setShowIntro(true)}
+            onClick={() => {
+              setShowIntro(false);
+              setShowIntroMenu(true);
+            }}
             className="px-4 py-2 rounded-lg font-mono text-xs font-semibold tracking-wider uppercase transition-all duration-200 border bg-gray-950/60 backdrop-blur-xl border-white/10 text-gray-400 hover:text-white hover:border-white/25 hover:bg-white/5"
           >
             ← Orqaga
