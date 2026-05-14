@@ -1,6 +1,8 @@
 import { useState } from "react";
 import titul from "../assets/Titul2.png";
 
+const pdfFile = "/nazariy-malumot.pdf";
+
 interface IntroPagesProps {
   onComplete: () => void;
   onBack?: () => void;
@@ -121,21 +123,24 @@ export default function IntroPages({ onComplete, onBack, onMenuStart, startAtMen
           {/* Content Area */}
           <div className="flex-1 flex items-center justify-center px-4 md:px-6 py-6 overflow-y-auto w-full">
             {selectedSection === 'nazariy' && (
-              <div className="max-w-2xl w-full animate-fadeIn flex flex-col">
-                <h2 className="text-4xl font-bold text-white mb-6">📚 Nazariy Ma'lumot</h2>
-                <div className="text-gray-300 space-y-4 bg-gray-950/40 backdrop-blur-sm border border-white/10 rounded-lg p-6 flex-1 mb-6">
-                  <p>Bu bo'limda Cisco 2600 Seriyasining nazariy asoslari va tuzilishi haqida ma'lumot joylashadi.</p>
-                  <p className="text-sm text-gray-500">Ma'lumot tez orada qo'shiladi...</p>
+              <div className="fixed inset-0 bg-gray-950 z-50 flex flex-col">
+                {/* Header */}
+                <div className="bg-gray-950 border-b border-white/10 px-6 py-4 flex items-center justify-between shrink-0">
+                  <h2 className="text-2xl font-bold text-white">📚 Nazariy Ma'lumot</h2>
+                  <button
+                    onClick={() => {
+                      setSelectedSection(null);
+                      if (startAtMenu) onBack?.();
+                    }}
+                    className="px-4 py-2 rounded-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
+                  >
+                    ← Orqaga
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    setSelectedSection(null);
-                    if (startAtMenu) onBack?.();
-                  }}
-                  className="px-4 py-2 rounded-lg font-semibold bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-white/10 transition-all duration-300 self-start"
-                >
-                  ← Orqaga
-                </button>
+                {/* PDF Viewer - Full Space */}
+                <div className="flex-1 overflow-hidden bg-gray-900">
+                  <embed src={pdfFile} type="application/pdf" className="w-full h-full" />
+                </div>
               </div>
             )}
 
