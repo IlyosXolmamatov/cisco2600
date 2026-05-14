@@ -122,7 +122,7 @@ export function WICCard({
     >
       {/* Card PCB body */}
       <mesh castShadow>
-        <boxGeometry args={[0.92, 0.05, 0.72]} />
+        <boxGeometry args={[0.46, 0.025, 0.36]} />
         <meshStandardMaterial
           color={hovered || isSelected ? "#2a5a3a" : "#1a3a2a"}
           metalness={0.3}
@@ -133,8 +133,8 @@ export function WICCard({
       </mesh>
       {/* PCB traces */}
       {Array.from({ length: 6 }).map((_, i) => (
-        <mesh key={`trace-${i}`} position={[0, 0.028, -0.28 + i * 0.11]}>
-          <boxGeometry args={[0.85, 0.003, 0.006]} />
+        <mesh key={`trace-${i}`} position={[0, 0.014, -0.14 + i * 0.055]}>
+          <boxGeometry args={[0.425, 0.0015, 0.003]} />
           <meshStandardMaterial
             color="#c8a830"
             metalness={0.95}
@@ -143,8 +143,8 @@ export function WICCard({
         </mesh>
       ))}
       {/* Front bracket — brushed aluminum */}
-      <mesh position={[0, 0.042, 0.38]}>
-        <boxGeometry args={[0.92, 0.125, 0.022]} />
+      <mesh position={[0, 0.021, 0.19]}>
+        <boxGeometry args={[0.46, 0.0625, 0.011]} />
         <meshStandardMaterial
           color="#6a6a7a"
           metalness={0.85}
@@ -152,31 +152,31 @@ export function WICCard({
         />
       </mesh>
       {/* RJ-45 port */}
-      <mesh position={[0.12, 0.07, 0.392]}>
-        <boxGeometry args={[0.19, 0.105, 0.022]} />
+      <mesh position={[0.06, 0.035, 0.196]}>
+        <boxGeometry args={[0.095, 0.0525, 0.011]} />
         <meshStandardMaterial color="#111111" />
       </mesh>
       {/* RJ-45 port inner */}
-      <mesh position={[0.12, 0.07, 0.394]}>
-        <boxGeometry args={[0.17, 0.085, 0.004]} />
+      <mesh position={[0.06, 0.035, 0.197]}>
+        <boxGeometry args={[0.085, 0.0425, 0.002]} />
         <meshStandardMaterial color="#222222" />
       </mesh>
       {/* Serial port (DB-9 style) */}
-      <mesh position={[-0.22, 0.07, 0.392]}>
-        <boxGeometry args={[0.16, 0.085, 0.022]} />
+      <mesh position={[-0.11, 0.035, 0.196]}>
+        <boxGeometry args={[0.08, 0.0425, 0.011]} />
         <meshStandardMaterial color="#111111" />
       </mesh>
       {/* LEDs */}
-      <mesh position={[0.38, 0.075, 0.392]}>
-        <boxGeometry args={[0.038, 0.038, 0.01]} />
+      <mesh position={[0.19, 0.0375, 0.196]}>
+        <boxGeometry args={[0.019, 0.019, 0.005]} />
         <meshStandardMaterial
           color="#00ff44"
           emissive="#00ff44"
           emissiveIntensity={1.8}
         />
       </mesh>
-      <mesh position={[0.3, 0.075, 0.392]}>
-        <boxGeometry args={[0.038, 0.038, 0.01]} />
+      <mesh position={[0.15, 0.0375, 0.196]}>
+        <boxGeometry args={[0.019, 0.019, 0.005]} />
         <meshStandardMaterial
           color="#ffaa00"
           emissive="#ffaa00"
@@ -186,13 +186,13 @@ export function WICCard({
       {/* IC chips on card */}
       {(
         [
-          [0.18, 0.04, -0.08],
-          [-0.18, 0.04, 0.05],
-          [0.32, 0.04, 0.1],
+          [0.09, 0.02, -0.04],
+          [-0.09, 0.02, 0.025],
+          [0.16, 0.02, 0.05],
         ] as [number, number, number][]
       ).map(([x, y, z], i) => (
         <mesh key={i} position={[x, y, z]}>
-          <boxGeometry args={[0.16, 0.032, 0.13]} />
+          <boxGeometry args={[0.08, 0.016, 0.065]} />
           <meshStandardMaterial
             color="#111122"
             metalness={0.5}
@@ -202,8 +202,8 @@ export function WICCard({
       ))}
       {/* Edge connector (bottom) */}
       {Array.from({ length: 20 }).map((_, i) => (
-        <mesh key={`pin-${i}`} position={[0, -0.025, -0.32 + i * 0.033]}>
-          <boxGeometry args={[0.085, 0.012, 0.02]} />
+        <mesh key={`pin-${i}`} position={[0, -0.0125, -0.16 + i * 0.0165]}>
+          <boxGeometry args={[0.0425, 0.006, 0.01]} />
           <meshStandardMaterial
             color="#d4aa20"
             metalness={0.98}
@@ -817,7 +817,7 @@ export function DRAM({
           setHovered(false);
         }}
       >
-        <boxGeometry args={[1.5, 0.2, 0.8]} />
+        <boxGeometry args={[0.335, 0.305, 0.102]} />
         <meshStandardMaterial
           color={hovered || isSelected ? "#1a4030" : "#004400"}
           metalness={0.08}
@@ -830,12 +830,12 @@ export function DRAM({
       {/* Memory chips — 2× DRAM IC's (typically 8MB or 16MB each) */}
       {(
         [
-          [-0.25, 0.08, 0.05],
-          [0.25, 0.08, 0.05],
+          [-0.08, 0.06, 0],
+          [0.08, 0.06, 0],
         ] as [number, number, number][]
       ).map(([x, y, z], i) => (
         <mesh key={`chip-${i}`} position={[x, y, z]} castShadow>
-          <boxGeometry args={[0.35, 0.085, 0.2]} />
+          <boxGeometry args={[0.12, 0.06, 0.05]} />
           <meshStandardMaterial
             color="#111122"
             metalness={0.5}
@@ -851,14 +851,14 @@ export function DRAM({
 
       {/* Top contact area */}
       <mesh position={[0, 0.065, 0]}>
-        <boxGeometry args={[1.0, 0.008, 0.5]} />
+        <boxGeometry args={[0.3, 0.006, 0.08]} />
         <meshStandardMaterial color="#1a1a2a" metalness={0.6} roughness={0.3} />
       </mesh>
 
       {/* Edge connector — bottom side */}
-      {Array.from({ length: 30 }).map((_, i) => (
-        <mesh key={`pin-${i}`} position={[-0.47 + i * 0.032, -0.04, 0]}>
-          <boxGeometry args={[0.02, 0.015, 0.045]} />
+      {Array.from({ length: 22 }).map((_, i) => (
+        <mesh key={`pin-${i}`} position={[-0.155 + i * 0.015, -0.045, 0]}>
+          <boxGeometry args={[0.012, 0.012, 0.035]} />
           <meshStandardMaterial
             color="#c8a830"
             metalness={0.98}
@@ -868,14 +868,14 @@ export function DRAM({
       ))}
 
       {/* Safety notch (keyed insertion) */}
-      <mesh position={[0, 0.062, -0.27]}>
-        <boxGeometry args={[0.12, 0.025, 0.03]} />
+      <mesh position={[0, 0.06, -0.055]}>
+        <boxGeometry args={[0.08, 0.02, 0.02]} />
         <meshStandardMaterial color="#000000" />
       </mesh>
 
       {/* Info label on back */}
-      <mesh position={[0, 0.068, 0.22]}>
-        <boxGeometry args={[0.95, 0.002, 0.08]} />
+      <mesh position={[0, 0.068, 0.042]}>
+        <boxGeometry args={[0.3, 0.002, 0.05]} />
         <meshStandardMaterial color="#333344" />
       </mesh>
     </group>

@@ -61,6 +61,38 @@ const specs: Record<string, ComponentSpec> = {
       },
     ],
   },
+  'fan': {
+    label: 'Sovutish Ventilyatori — 60mm Blower',
+    description: "Cisco 2600 ichki haroratini nazorat qiluvchi 60mm mermerli ventilyator. Tizim PSU orqali elektr ta'minlanadi va avtomatik ravishda xotiralanmagan rejimlarda yalangga tushadi.",
+    specGroups: [
+      {
+        category: 'JISMONIY',
+        fields: [
+          { key: 'Tur', value: '60mm AC/DC blower fan', bold: true },
+          { key: "O'lchamlar", value: '60mm × 60mm × 15mm' },
+          { key: 'Material', value: "Plastik korpus + fo'lat merkez" },
+          { key: 'Vazn', value: '~80g' },
+        ],
+      },
+      {
+        category: 'TEXNIK',
+        fields: [
+          { key: 'Quvvat', value: '12V DC / 0.25A', bold: true },
+          { key: 'Revolyutsiya', value: '5000-7000 RPM', bold: true },
+          { key: "Havo Oqimi", value: '15-20 CFM (kubik fut/minut)' },
+          { key: 'Shovqin', value: '~35 dB (A)' },
+        ],
+      },
+      {
+        category: 'FOYDALANISH',
+        fields: [
+          { key: 'Harorat Nazorati', value: 'PSU termostati tomonidan boshqariladi' },
+          { key: 'Xotira O\'tkazmachanlik', value: 'Yuqori yuk vaqtida faol' },
+          { key: 'Umri Qilish', value: '~20,000 soat (MTBF)' },
+        ],
+      },
+    ],
+  },
   'pcb': {
     label: 'Asosiy Plata / Tizim PCB',
     description: "Protsessor, xotira interfeyslari, WIC uyalari, NM uyasi va Cisco 2600 platformasining barcha avtobus mantig'ini o'z ichiga olgan asosiy tizim platasi.",

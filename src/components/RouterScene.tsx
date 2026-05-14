@@ -82,8 +82,8 @@ const REST = {
   ior: { x: 0.35, y: 0.08, z: 0.92, name: "9-Internal I/O Connector/Riser" },
 
   /* DRAM Memory Modules — Right-Front area, vertical slots */
-  dram0: { x: 1.8, y: -0.1, z: 0.45, name: "5a-DRAM DIMM Slot 0 (8-16MB)" },
-  dram1: { x: 1.8, y: -0.1, z: 0.65, name: "5b-DRAM DIMM Slot 1 (8-16MB)" },
+  dram0: { x: 0.45, y: -0.12, z: 0.28, name: "5a-DRAM DIMM Slot 0 (8-16MB)" },
+  dram1: { x: 0.45, y: -0.12, z: 0.42, name: "5b-DRAM DIMM Slot 1 (8-16MB)" },
 };
 
 const EXPLODED = {
@@ -97,8 +97,8 @@ const EXPLODED = {
   fan: { x: -2.5, y: 0.5, z: 0.75 }, // Left-front, forward + outward
   hdd: { x: 2.5, y: 0.55, z: 2.35 }, // Right, outward + forward
   ior: { x: 0.35, y: 1.5, z: 1.6 }, // Front-right, upward + forward
-  dram0: { x: 2.8, y: 2.3, z: 0.45 }, // Right-front, lifts with motherboard
-  dram1: { x: 2.8, y: 2.3, z: 0.65 }, // Right-front, lifts with motherboard
+  dram0: { x: 0.45, y: 2.18, z: 0.28 }, // Center-front, lifts with motherboard
+  dram1: { x: 0.45, y: 2.18, z: 0.42 }, // Center-front, lifts with motherboard
 };
 
 type ComponentKey = keyof typeof REST;

@@ -32,8 +32,8 @@ const CATEGORY_STYLE: Record<
 function SpecGroupBlock({ group }: { group: SpecGroup }) {
   const style = CATEGORY_STYLE[group.category] ?? {
     label: group.category,
-    color: "#9ca3af",
-    bg: "rgba(156,163,175,0.1)",
+    color: "#6b7280",
+    bg: "rgba(107,114,128,0.1)",
   };
   return (
     <div className="mb-3">
@@ -52,7 +52,7 @@ function SpecGroupBlock({ group }: { group: SpecGroup }) {
             <span
               className="text-[11px] text-right leading-tight"
               style={{
-                color: f.bold ? "#e2e8f0" : "#94a3b8",
+                color: f.bold ? "#1f2937" : "#6b7280",
                 fontWeight: f.bold ? 600 : 400,
               }}
             >
@@ -101,6 +101,8 @@ export default function App() {
 
   const glassPanel =
     "bg-gray-950/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl";
+
+  const lightPanel = "bg-white border border-gray-200 shadow-2xl rounded-xl";
 
   // Show intro pages first
   if (showIntro || showIntroMenu) {
@@ -232,7 +234,7 @@ export default function App() {
         <div
           className={`absolute top-20 right-6 w-80 transition-all duration-300 opacity-100 translate-x-0`}
         >
-          <div className={`${glassPanel} p-4`}>
+          <div className={`${lightPanel} p-4`}>
             <div className="flex items-center gap-2 mb-2">
               <div
                 className="w-2.5 h-2.5 rounded-full shrink-0 shadow-lg"
@@ -249,16 +251,16 @@ export default function App() {
               </span>
               <button
                 onClick={() => setRearSel(null)}
-                className="ml-auto text-gray-600 hover:text-white text-base transition-colors w-5 h-5 flex items-center justify-center rounded hover:bg-white/10"
+                className="ml-auto text-gray-600 hover:text-gray-900 text-base transition-colors w-5 h-5 flex items-center justify-center rounded hover:bg-gray-200"
               >
                 ×
               </button>
             </div>
 
-            <h2 className="text-white font-semibold text-sm leading-tight mb-1.5">
+            <h2 className="text-gray-900 font-semibold text-sm leading-tight mb-1.5">
               {rearSelected.label}
             </h2>
-            <p className="text-gray-500 text-[11px] leading-relaxed mb-3 border-b border-white/8 pb-3">
+            <p className="text-gray-600 text-[11px] leading-relaxed mb-3 border-b border-gray-300 pb-3">
               {rearSelected.description}
             </p>
             <div>
@@ -279,24 +281,24 @@ export default function App() {
               : "opacity-0 translate-x-8 pointer-events-none"
           }`}
         >
-          <div className={`${glassPanel} p-4`}>
+          <div className={`${lightPanel} p-4`}>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-cyan-400 shadow-lg shadow-cyan-400/40" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cyan-400">
+              <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-cyan-500 shadow-lg shadow-cyan-500/40" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cyan-600">
                 KOMPONENT
               </span>
               <button
                 onClick={() => setRouterSel(null)}
-                className="ml-auto text-gray-600 hover:text-white text-base transition-colors w-5 h-5 flex items-center justify-center rounded hover:bg-white/10"
+                className="ml-auto text-gray-600 hover:text-gray-900 text-base transition-colors w-5 h-5 flex items-center justify-center rounded hover:bg-gray-200"
               >
                 ×
               </button>
             </div>
 
-            <h2 className="text-white font-semibold text-sm leading-tight mb-1.5">
+            <h2 className="text-gray-900 font-semibold text-sm leading-tight mb-1.5">
               {routerSelected.label}
             </h2>
-            <p className="text-gray-500 text-[11px] leading-relaxed mb-3 border-b border-white/8 pb-3">
+            <p className="text-gray-600 text-[11px] leading-relaxed mb-3 border-b border-gray-300 pb-3">
               {routerSelected.description}
             </p>
             <div>

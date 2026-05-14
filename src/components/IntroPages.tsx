@@ -111,22 +111,38 @@ export default function IntroPages({
 
           {/* Mobile Menu - Top Bar */}
           <div className="md:hidden w-full bg-linear-to-b from-gray-950/95 to-blue-950/95 backdrop-blur-xl border-b border-white/10 p-3">
-            <div className="flex flex-wrap gap-2 justify-start">
-              {menuItems.map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => handleSelectSection(item.id)}
-                  className={`px-3 py-2 rounded-lg transition-all duration-300 border text-xs md:text-sm whitespace-nowrap ${
-                    selectedSection === item.id
-                      ? "bg-blue-500/30 border-blue-400/60 text-white"
-                      : "border-white/10 text-gray-300 hover:bg-white/5 hover:border-white/20"
-                  }`}
-                >
-                  <span className="hidden sm:inline">{item.icon} </span>
-                  <span className="text-xs">{item.title.substring(0, 8)}</span>
-                </button>
-              ))}
-            </div>
+            {!selectedSection ? (
+              // Show all menu items when no section is selected
+              <div className="flex flex-wrap gap-2 justify-start">
+                {menuItems.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSelectSection(item.id)}
+                    className={`px-3 py-2 rounded-lg transition-all duration-300 border text-xs md:text-sm whitespace-nowrap ${
+                      selectedSection === item.id
+                        ? "bg-blue-500/30 border-blue-400/60 text-white"
+                        : "border-white/10 text-gray-300 hover:bg-white/5 hover:border-white/20"
+                    }`}
+                  >
+                    <span className="hidden sm:inline">{item.icon} </span>
+                    <span className="text-xs">
+                      {item.title.substring(0, 8)}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              // Show only back button when a section is selected
+              <button
+                onClick={() => {
+                  setSelectedSection(null);
+                  if (startAtMenu) onBack?.();
+                }}
+                className="w-full px-4 py-2 rounded-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
+              >
+                ← Orqaga
+              </button>
+            )}
           </div>
 
           {/* Content Area */}
