@@ -9,6 +9,11 @@ interface VideoItem {
   duration: string;
 }
 
+import RouterFunctionsGif from "../assets/Router-Functions-Example.gif";
+import RouterOnStickAnimationGif from "../assets/router-on-a-stick-animation.gif";
+import RouterOnStickLogicalGif from "../assets/router-on-a-stick-logical-view.gif";
+import RoutingBetweenVlansGif from "../assets/routing-between-vlans.gif";
+
 const VIDEOS: VideoItem[] = [
   {
     id: "1",
@@ -21,29 +26,39 @@ const VIDEOS: VideoItem[] = [
   },
   {
     id: "2",
-    title: "Modullar va Konfiguratsiya",
+    title: "Router Funksiyalari - Animatsiya",
     description:
-      "Router modullarining o'rnatilishi va sozlanishi bo'yicha to'liq ko'rsatma",
-    url: "bhjV7zoW6pk",
-    thumbnail: "https://img.youtube.com/vi/bhjV7zoW6pk/maxresdefault.jpg",
-    duration: "22 daqiqa",
+      "Router funksiyalarining vizual namoyishi va amaliy misollari",
+    url: RouterFunctionsGif,
+    thumbnail: RouterFunctionsGif,
+    duration: "Animatsiya",
   },
   {
     id: "3",
-    title: "Orqa Panel Taxlilash",
+    title: "Router-on-a-Stick Texnikasi",
     description:
-      "Orqa panel portlari va ularning funksiyalari haqida batafsil ma'lumot",
-    url: "bhjV7zoW6pk",
-    thumbnail: "https://img.youtube.com/vi/bhjV7zoW6pk/maxresdefault.jpg",
-    duration: "18 daqiqa",
+      "Router-on-a-stick usuli orqali VLAN o'rtasida yo'naltirish",
+    url: RouterOnStickAnimationGif,
+    thumbnail: RouterOnStickAnimationGif,
+    duration: "Animatsiya",
   },
   {
     id: "4",
-    title: "Yuqori Darajadagi Amallar",
-    description: "Murakkab konfiguratsiya va diagnostika mexanizmlari",
-    url: "bhjV7zoW6pk",
-    thumbnail: "https://img.youtube.com/vi/bhjV7zoW6pk/maxresdefault.jpg",
-    duration: "28 daqiqa",
+    title: "Router-on-a-Stick Mantiqiy Ko'rinishi",
+    description:
+      "Router-on-a-stick topologiyasining mantiqiy sxemasi",
+    url: RouterOnStickLogicalGif,
+    thumbnail: RouterOnStickLogicalGif,
+    duration: "Animatsiya",
+  },
+  {
+    id: "5",
+    title: "VLAN O'rtasida Yo'naltirish",
+    description:
+      "Turli VLAN'lar o'rtasida ma'lumotlar yo'naltirish jarayoni",
+    url: RoutingBetweenVlansGif,
+    thumbnail: RoutingBetweenVlansGif,
+    duration: "Animatsiya",
   },
 ];
 
@@ -146,16 +161,26 @@ export default function VideoTutorials() {
               </button>
             </div>
 
-            {/* Video Player */}
-            <div className="relative w-full pb-[56.25%] bg-black">
-              <iframe
-                className="absolute top-0 left-0 w-full h-full"
-                src={`https://www.youtube.com/embed/${modal.videoUrl}?autoplay=1`}
-                title={modal.videoTitle}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            {/* Video/GIF Player */}
+            <div className="relative w-full bg-black flex items-center justify-center">
+              {modal.videoUrl.includes(".gif") ? (
+                <img
+                  src={modal.videoUrl}
+                  alt={modal.videoTitle}
+                  className="w-full h-auto max-h-[70vh] object-contain"
+                />
+              ) : (
+                <div className="relative w-full pb-[56.25%]">
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src={`https://www.youtube.com/embed/${modal.videoUrl}?autoplay=1`}
+                    title={modal.videoTitle}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              )}
             </div>
 
             {/* Modal Footer */}
