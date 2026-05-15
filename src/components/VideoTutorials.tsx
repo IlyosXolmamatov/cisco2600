@@ -69,9 +69,9 @@ export default function VideoTutorials() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       {/* Video Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full auto-rows-fr">
         {VIDEOS.map(video => (
           <div
             key={video.id}
