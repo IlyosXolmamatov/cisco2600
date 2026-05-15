@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import titul from "../assets/Titul2.png";
 import VideoTutorials from "./VideoTutorials";
+import gif1 from "../assets/Router-Functions-Example.gif";
+import gif2 from "../assets/router-on-a-stick-animation.gif";
+import gif3 from "../assets/router-on-a-stick-logical-view.gif";
+import gif4 from "../assets/routing-between-vlans.gif";
 
 const pdfFile = "/nazariy-malumot.pdf";
 
@@ -565,7 +569,7 @@ export default function IntroPages({
                       <div className="bg-gray-800/50 rounded-lg overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-300">
                         <div className="bg-black p-4">
                           <img
-                            src="/src/assets/Router-Functions-Example.gif"
+                            src={gif1}
                             alt="Router Functions Example"
                             className="w-full h-64 object-cover rounded"
                           />
@@ -587,7 +591,7 @@ export default function IntroPages({
                       <div className="bg-gray-800/50 rounded-lg overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-300">
                         <div className="bg-black p-4">
                           <img
-                            src="/src/assets/router-on-a-stick-animation.gif"
+                            src={gif2}
                             alt="Router on a Stick Animation"
                             className="w-full h-64 object-cover rounded"
                           />
@@ -609,7 +613,7 @@ export default function IntroPages({
                       <div className="bg-gray-800/50 rounded-lg overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-300">
                         <div className="bg-black p-4">
                           <img
-                            src="/src/assets/router-on-a-stick-logical-view.gif"
+                            src={gif3}
                             alt="Router on a Stick Logical View"
                             className="w-full h-64 object-cover rounded"
                           />
@@ -631,7 +635,7 @@ export default function IntroPages({
                       <div className="bg-gray-800/50 rounded-lg overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-300">
                         <div className="bg-black p-4">
                           <img
-                            src="/src/assets/routing-between-vlans.gif"
+                            src={gif4}
                             alt="Routing Between VLANs"
                             className="w-full h-64 object-cover rounded"
                           />
