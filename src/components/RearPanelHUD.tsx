@@ -91,20 +91,20 @@ export default function RearPanelHUD({
               : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
           }`}
         >
-          {rearCoverOpen ? "◄ Close Cover" : "► Open Cover"}
+          {rearCoverOpen ? "◄ Qopqoqni Yop" : "► Qopqoqni Och"}
         </button>
 
         <button
           onClick={onReset}
           className="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-white font-bold transition-all shadow-lg"
         >
-          ↻ Reset View
+          ↻ Qayta O'rnatish
         </button>
 
         <div className="flex-1" />
 
         <div className="bg-gray-900/80 backdrop-blur px-4 py-2 rounded border border-cyan-600/30 text-cyan-400">
-          Rear Panel • Cisco 2600 Series Router
+          Orqa Panel • Cisco 2600 Seriyasi Router
         </div>
       </div>
 
@@ -149,15 +149,18 @@ export default function RearPanelHUD({
                 className="w-2 h-2 rounded-full"
                 style={{ backgroundColor: selectedSpec.indicatorColor }}
               />
-              <span className="text-gray-400 text-xs">Component Selected</span>
+              <span className="text-gray-400 text-xs">
+                Komponent Tanlab Olindi
+              </span>
             </div>
           </div>
         ) : (
           <div className="bg-gray-900/80 backdrop-blur border border-dashed border-gray-600 rounded-lg p-4 text-gray-500 text-xs max-w-md">
-            💡 Click on any port or component to view details
+            💡 Tafsilotlarni ko'rish uchun istalgan portga yoki komponentga
+            bosing
             <div className="mt-2 text-gray-600">
-              • AC Inlet • Rocker Switch • Console Port • AUX Port
-              <br />• Ethernet 0/0 • WIC DB-60 • NM Slot Blank
+              • AC Kirish • Burun Tugmasi • Konsol Porti • AUX Porti
+              <br />• Ethernet 0/0 • WIC DB-60 • NM Orin Bo'sh
             </div>
           </div>
         )}
@@ -165,32 +168,32 @@ export default function RearPanelHUD({
 
       {/* Component Status Indicators (Right Side) */}
       <div className="absolute right-6 top-1/2 transform -translate-y-1/2 space-y-2 pointer-events-auto">
-        <div className="text-gray-500 text-xs font-bold mb-3">STATUS</div>
+        <div className="text-gray-500 text-xs font-bold mb-3">HOLATI</div>
 
         {/* Power Status */}
         <div className="flex items-center gap-2 bg-gray-900/60 px-3 py-1 rounded border border-gray-700">
           <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
           <span className="text-gray-400">
-            PWR: {rearCoverOpen ? "COVER OPEN" : "NORMAL"}
+            QUV: {rearCoverOpen ? "QOPQOQ OCHIQ" : "ODATIY"}
           </span>
         </div>
 
         {/* WIC Status */}
         <div className="flex items-center gap-2 bg-gray-900/60 px-3 py-1 rounded border border-gray-700">
           <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-          <span className="text-gray-400">WIC-1T: ACTIVE</span>
+          <span className="text-gray-400">WIC-1T: FAOL</span>
         </div>
 
         {/* NM Status */}
         <div className="flex items-center gap-2 bg-gray-900/60 px-3 py-1 rounded border border-gray-700">
           <div className="w-1.5 h-1.5 rounded-full bg-yellow-600" />
-          <span className="text-gray-400">NM: EMPTY</span>
+          <span className="text-gray-400">NM: BO'SH</span>
         </div>
 
         {/* Ethernet Status */}
         <div className="flex items-center gap-2 bg-gray-900/60 px-3 py-1 rounded border border-gray-700">
           <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-gray-400">ETH0/0: LINK</span>
+          <span className="text-gray-400">ETH0/0: ALOQA</span>
         </div>
       </div>
     </div>
