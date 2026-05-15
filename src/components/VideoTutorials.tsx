@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface VideoItem {
   id: string;
@@ -9,56 +9,47 @@ interface VideoItem {
   duration: string;
 }
 
-import RouterFunctionsGif from "../assets/Router-Functions-Example.gif";
-import RouterOnStickAnimationGif from "../assets/router-on-a-stick-animation.gif";
-import RouterOnStickLogicalGif from "../assets/router-on-a-stick-logical-view.gif";
-import RoutingBetweenVlansGif from "../assets/routing-between-vlans.gif";
-
 const VIDEOS: VideoItem[] = [
   {
     id: "1",
     title: "Cisco 2600 - Qisqacha Ko'rikma",
     description:
       "Cisco 2600 router seriyasining to'liq umumiy ko'rinishi va asosiy xususiyatlari",
-    url: "C4E7zfvDHyU",
-    thumbnail: "https://img.youtube.com/vi/C4E7zfvDHyU/maxresdefault.jpg",
+    url: "QHC-7SkUYTU",
+    thumbnail: "https://img.youtube.com/vi/QHC-7SkUYTU/maxresdefault.jpg",
     duration: "15 daqiqa",
   },
   {
     id: "2",
-    title: "Router Funksiyalari - Animatsiya",
-    description:
-      "Router funksiyalarining vizual namoyishi va amaliy misollari",
-    url: RouterFunctionsGif,
-    thumbnail: RouterFunctionsGif,
-    duration: "Animatsiya",
+    title: "Router Funksiyalari",
+    description: "Router funksiyalarining vizual namoyishi va amaliy misollari",
+    url: "C4E7zfvDHyU",
+    thumbnail: "https://img.youtube.com/vi/C4E7zfvDHyU/maxresdefault.jpg",
+    duration: "22 daqiqa",
   },
   {
     id: "3",
     title: "Router-on-a-Stick Texnikasi",
-    description:
-      "Router-on-a-stick usuli orqali VLAN o'rtasida yo'naltirish",
-    url: RouterOnStickAnimationGif,
-    thumbnail: RouterOnStickAnimationGif,
-    duration: "Animatsiya",
+    description: "Router-on-a-stick usuli orqali VLAN o'rtasida yo'naltirish",
+    url: "bhjV7zoW6pk",
+    thumbnail: "https://img.youtube.com/vi/bhjV7zoW6pk/maxresdefault.jpg",
+    duration: "18 daqiqa",
   },
   {
     id: "4",
     title: "Router-on-a-Stick Mantiqiy Ko'rinishi",
-    description:
-      "Router-on-a-stick topologiyasining mantiqiy sxemasi",
-    url: RouterOnStickLogicalGif,
-    thumbnail: RouterOnStickLogicalGif,
-    duration: "Animatsiya",
+    description: "Router-on-a-stick topologiyasining mantiqiy sxemasi",
+    url: "yc78VJVq2Qk",
+    thumbnail: "https://img.youtube.com/vi/yc78VJVq2Qk/maxresdefault.jpg",
+    duration: "28 daqiqa",
   },
   {
     id: "5",
     title: "VLAN O'rtasida Yo'naltirish",
-    description:
-      "Turli VLAN'lar o'rtasida ma'lumotlar yo'naltirish jarayoni",
-    url: RoutingBetweenVlansGif,
-    thumbnail: RoutingBetweenVlansGif,
-    duration: "Animatsiya",
+    description: "Turli VLAN'lar o'rtasida ma'lumotlar yo'naltirish jarayoni",
+    url: "e4Ug5mCDbhY",
+    thumbnail: "https://img.youtube.com/vi/e4Ug5mCDbhY/maxresdefault.jpg",
+    duration: "30 daqiqa",
   },
 ];
 
@@ -69,32 +60,53 @@ interface ModalState {
 }
 
 export default function VideoTutorials() {
-  const [modal, setModal] = useState<ModalState>({
-    isOpen: false,
-    videoUrl: "",
-    videoTitle: "",
+  const [modal, setModal] = useState<ModalState>(() => {
+    // LocalStorage'dan modal holatini o'qish
+    const saved = localStorage.getItem("videoModalState");
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    return {
+      isOpen: false,
+      videoUrl: "",
+      videoTitle: "",
+    };
   });
 
+  // Local Storage'ga video ro'yxatini va modal holatini saqlash
+  useEffect(() => {
+    localStorage.setItem("videoTutorials", JSON.stringify(VIDEOS));
+  }, []);
+
+  useEffect(() => {
+    // Modal holati o'zgarsa localStorage'ga saqlash
+    localStorage.setItem("videoModalState", JSON.stringify(modal));
+  }, [modal]);
+
   const openVideo = (url: string, title: string) => {
-    setModal({ isOpen: true, videoUrl: url, videoTitle: title });
+    const newState = { isOpen: true, videoUrl: url, videoTitle: title };
+    setModal(newState);
+    localStorage.setItem("videoModalState", JSON.stringify(newState));
   };
 
   const closeModal = () => {
-    setModal({ isOpen: false, videoUrl: "", videoTitle: "" });
+    const newState = { isOpen: false, videoUrl: "", videoTitle: "" };
+    setModal(newState);
+    localStorage.setItem("videoModalState", JSON.stringify(newState));
   };
 
   return (
     <div className="w-full h-full">
       {/* Video Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full auto-rows-fr">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {VIDEOS.map(video => (
           <div
             key={video.id}
             onClick={() => openVideo(video.url, video.title)}
-            className="group cursor-pointer rounded-lg overflow-hidden bg-gray-900/40 border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20"
+            className="group bg-gray-800/50 rounded-lg overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-blue-500/20 flex flex-col"
           >
             {/* Thumbnail Container */}
-            <div className="relative w-full pb-[56.25%] bg-black overflow-hidden">
+            <div className="relative w-full aspect-video bg-black overflow-hidden shrink-0">
               <img
                 src={video.thumbnail}
                 alt={video.title}

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -66,8 +66,14 @@ function SpecGroupBlock({ group }: { group: SpecGroup }) {
 }
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(true);
-  const [showIntroMenu, setShowIntroMenu] = useState(false);
+  const [showIntro, setShowIntro] = useState(() => {
+    const saved = localStorage.getItem("showIntro");
+    return saved !== "false";
+  });
+  const [showIntroMenu, setShowIntroMenu] = useState(() => {
+    const saved = localStorage.getItem("showIntroMenu");
+    return saved === "true";
+  });
   const [isCoverOpen, setIsCoverOpen] = useState(false);
   const [isExploded, setIsExploded] = useState(false);
   const [routerSel, setRouterSel] = useState<string | null>(null);
@@ -75,6 +81,15 @@ export default function App() {
   const [rearCoverOpen, setRearCoverOpen] = useState(false);
   const [rearSel, setRearSel] = useState<string | null>(null);
   const [showSpecs, setShowSpecs] = useState(true);
+
+  // Holatni localStorage'ga saqlash
+  useEffect(() => {
+    localStorage.setItem("showIntro", String(showIntro));
+  }, [showIntro]);
+
+  useEffect(() => {
+    localStorage.setItem("showIntroMenu", String(showIntroMenu));
+  }, [showIntroMenu]);
 
   const handleRouterSelect = useCallback((id: string) => {
     setRouterSel(prev => (prev === id ? null : id));

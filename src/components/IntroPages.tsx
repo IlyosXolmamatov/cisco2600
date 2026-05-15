@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import titul from "../assets/Titul2.png";
 import VideoTutorials from "./VideoTutorials";
 
@@ -27,15 +27,33 @@ export default function IntroPages({
   onMenuStart,
   startAtMenu = false,
 }: IntroPagesProps) {
-  const [currentPage, setCurrentPage] = useState<"title" | "menu">(
-    startAtMenu ? "menu" : "title",
-  );
+  const [currentPage, setCurrentPage] = useState<"title" | "menu">(() => {
+    const saved = localStorage.getItem("introCurrentPage");
+    if (saved === "menu" || startAtMenu) return "menu";
+    return "title";
+  });
+
   const [selectedSection, setSelectedSection] = useState<MenuSection | null>(
-    null,
+    () => {
+      const saved = localStorage.getItem("introSelectedSection");
+      return saved as MenuSection | null;
+    },
   );
+
+  // Holatni localStorage'ga saqlash
+  useEffect(() => {
+    localStorage.setItem("introCurrentPage", currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (selectedSection) {
+      localStorage.setItem("introSelectedSection", selectedSection);
+    }
+  }, [selectedSection]);
 
   const handleSelectSection = (sectionId: MenuSection) => {
     setSelectedSection(sectionId);
+    localStorage.setItem("introSelectedSection", sectionId);
 
     // Agar 3D modeli tanlansa, 3D page ochilsin
     if (sectionId === "3d") {
@@ -634,11 +652,11 @@ export default function IntroPages({
 
                     <div className="bg-blue-500/20 border border-blue-500/40 rounded-lg p-4 mt-6">
                       <p className="text-blue-300 text-sm leading-relaxed">
-                        💡 <strong>Eslatma:</strong> Yuqoridagi animatsiyalar
-                        Cisco 2600 marshrutizatorining asosiy ishlash
-                        tamoyillarini vizual tarzda tushuntiradi. Har bir rasmni
-                        diqqat bilan ko'rib chiqib, marshrutizatsiya mexanizmini
-                        tushunishga yordam beradi.
+                        💡 <b>Eslatma:</b> Yuqoridagi animatsiyalar Cisco 2600
+                        marshrutizatorining asosiy ishlash tamoyillarini vizual
+                        tarzda tushuntiradi. Har bir rasmni diqqat bilan ko'rib
+                        chiqib, marshrutizatsiya mexanizmini tushunishga yordam
+                        beradi.
                       </p>
                     </div>
                   </div>
